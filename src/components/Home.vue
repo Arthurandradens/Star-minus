@@ -1,54 +1,108 @@
 <template>
-  <v-container >
+  <v-container>
     <p class="text-h5 font-weight-bold mb-2">Popular Movies</p>
-    <v-carousel v-model="currentMoviePage" hideDelimiters hide-delimiter-background>
+    <v-carousel
+      v-model="currentMoviePage"
+      hideDelimiters
+      hide-delimiter-background
+    >
       <template v-slot:prev>
-        <v-btn icon @click="prevMovieSlide()">
+        <v-btn
+          icon
+          @click="prevSlide(currentMoviePage, movieCarousel, 'movie')"
+        >
           <v-icon> mdi-chevron-left </v-icon>
         </v-btn>
       </template>
       <v-row justify="center">
-        <v-col v-for="(movie, indice) in paginateMovieCard" :key="indice">
-          <movie-card :movie="movie"></movie-card>
+        <v-col v-for="(card, indice) in paginateMovieCard" :key="indice">
+          <card :card="card"></card>
         </v-col>
       </v-row>
       <template v-slot:next>
-        <v-btn icon @click="nextMovieSlide(currentMoviePage, movieCarousel)">
+        <v-btn
+          icon
+          @click="nextSlide(currentMoviePage, movieCarousel, 'movie')"
+        >
           <v-icon> mdi-chevron-right </v-icon>
         </v-btn>
       </template>
     </v-carousel>
 
     <p class="text-h5 font-weight-bold mb-2">Popular Series</p>
-    <v-carousel v-model="currentSeriesPage" hideDelimiters hide-delimiter-background>
+    <v-carousel
+      v-model="currentSeriesPage"
+      hideDelimiters
+      hide-delimiter-background
+    >
       <template v-slot:prev>
-        <v-btn icon @click="prevSeriesSlide()">
+        <v-btn
+          icon
+          @click="prevSlide(currentSeriesPage, seriesCarousel, 'series')"
+        >
           <v-icon> mdi-chevron-left </v-icon>
         </v-btn>
       </template>
       <v-row justify="center">
-        <v-col v-for="(movie, indice) in paginateSeriesCard" :key="indice">
-          <movie-card :movie="movie"></movie-card>
+        <v-col v-for="(card, indice) in paginateSeriesCard" :key="indice">
+          <card :card="card"></card>
         </v-col>
       </v-row>
       <template v-slot:next>
-        <v-btn icon @click="nextSeriesSlide()">
+        <v-btn
+          icon
+          @click="nextSlide(currentSeriesPage, seriesCarousel, 'series')"
+        >
           <v-icon> mdi-chevron-right </v-icon>
         </v-btn>
       </template>
     </v-carousel>
+    <p class="text-h5 font-weight-bold mb-2">Live Now</p>
+    <v-carousel
+      v-model="currentLiveMoviePage"
+      hideDelimiters
+      hide-delimiter-background
+    >
+      <template v-slot:prev>
+        <v-btn
+          icon
+          @click="prevSlide(currentLiveMoviePage, liveMovieCarousel, 'live')"
+        >
+          <v-icon> mdi-chevron-left </v-icon>
+        </v-btn>
+      </template>
+      <v-row justify="center">
+        <v-col v-for="(card, indice) in paginateLiveMovieCard" :key="indice">
+          <card :card="card"></card>
+        </v-col>
+      </v-row>
+      <template v-slot:next>
+        <v-btn
+          icon
+          @click="nextSlide(currentLiveMoviePage, liveMovieCarousel, 'live')"
+        >
+          <v-icon> mdi-chevron-right </v-icon>
+        </v-btn>
+      </template>
+    </v-carousel>
+
+
+      <!-- <popular-movie ></popular-movie> -->
+
   </v-container>
 </template>
 
 
 <script>
-import MovieCard from "@/components/movie/MovieCard.vue";
+import Card from "@/components/card/Card.vue";
+// import PopularMovie from "@/components/movie/PupularMovie.vue";
 import axios from "axios";
 
 export default {
   name: "Home",
   components: {
-    MovieCard,
+    Card,
+    // PopularMovie,
   },
 
   computed: {
@@ -59,6 +113,13 @@ export default {
       return this.popularMovies.slice(startIndex, endIndex);
     },
 
+    paginateLiveMovieCard() {
+      const startIndex = (this.currentLiveMoviePage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+
+      return this.liveMovies.slice(startIndex, endIndex);
+    },
+
     paginateSeriesCard() {
       const startIndex = (this.currentSeriesPage - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
@@ -66,9 +127,12 @@ export default {
       return this.popularSeries.slice(startIndex, endIndex);
     },
 
-
     movieCarousel() {
       return this.popularMovies.length / this.pageSize;
+    },
+
+    liveMovieCarousel() {
+      return this.liveMovies.length / this.pageSize;
     },
 
     seriesCarousel() {
@@ -83,7 +147,9 @@ export default {
       ApiKey: import.meta.env.VITE_API_KEY,
       popularSeries: [],
       popularMovies: [],
+      liveMovies: [],
       currentMoviePage: 1,
+      currentLiveMoviePage: 1,
       currentSeriesPage: 1,
       pageSize: 4,
     };
@@ -92,9 +158,9 @@ export default {
   methods: {
     async getPopularMovies() {
       try {
-        const popularMoviesUrl = `${this.moviesURL}popular?${this.ApiKey}`;
+        const url = `${this.moviesURL}popular?${this.ApiKey}`;
 
-        const response = await axios.get(popularMoviesUrl);
+        const response = await axios.get(url);
         this.popularMovies = response.data.results;
         return this.popularMovies;
       } catch (error) {
@@ -102,11 +168,23 @@ export default {
       }
     },
 
+    async getLiveMovies() {
+      try {
+        const url = `${this.moviesURL}now_playing?${this.ApiKey}`;
+
+        const response = await axios.get(url);
+        this.liveMovies = response.data.results;
+        return this.liveMovies;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     async getPopularSeries() {
       try {
-        const popularSeriesUrl = `${this.seriesURL}popular?${this.ApiKey}`;
+        const url = `${this.seriesURL}popular?${this.ApiKey}`;
 
-        const response = await axios.get(popularSeriesUrl);
+        const response = await axios.get(url);
         this.popularSeries = response.data.results;
         return this.popularSeries;
       } catch (error) {
@@ -114,36 +192,72 @@ export default {
       }
     },
 
-    nextMovieSlide(currentMoviePage,movieCarousel) {
-      if (currentMoviePage > movieCarousel - 1) {
-        return (currentMoviePage = 1);
+    nextSlide(currentPage, carousel, type) {
+      if (currentPage > carousel - 1) {
+        switch (type) {
+          case "movie":
+            this.currentMoviePage = 1;
+            break;
+          case "series":
+            this.currentSeriesPage = 1;
+            break;
+          case "live":
+            this.currentLiveMoviePage = 1;
+            break;
+
+          default:
+            break;
+        }
+      } else {
+        switch (type) {
+          case "movie":
+            this.currentMoviePage++;
+            break;
+          case "series":
+            this.currentSeriesPage++;
+            break;
+          case "live":
+            this.currentLiveMoviePage++;
+            break;
+
+          default:
+            break;
+        }
       }
-      return currentMoviePage++;
     },
 
-    prevMovieSlide() {
-      if (this.currentMoviePage <= 1) {
-        return (this.currentMoviePage = this.movieCarousel);
-      }
-      return this.currentMoviePage--;
-    },
+    prevSlide(currentPage, carousel, type) {
+      if (currentPage <= 1) {
+        switch (type) {
+          case "movie":
+            this.currentMoviePage = carousel - 1;
+            break;
+          case "series":
+            this.currentSeriesPage = carousel;
+            break;
+          case "live":
+            this.currentLiveMoviePage = carousel;
+            break;
 
-    nextSeriesSlide() {
-      if (this.currentSeriesPage > this.seriesCarousel - 1) {
-        return (this.currentSeriesPage = 1);
-      }
-      return this.currentSeriesPage++;
-    },
+          default:
+            break;
+        }
+      } else {
+        switch (type) {
+          case "movie":
+            this.currentMoviePage--;
+            break;
+          case "series":
+            this.currentSeriesPage--;
+            break;
+          case "live":
+            this.currentLiveMoviePage--;
+            break;
 
-    prevSeriesSlide() {
-      if (this.currentSeriesPage <= 1) {
-        return (this.currentSeriesPage = this.seriesCarousel);
+          default:
+            break;
+        }
       }
-      return this.currentSeriesPage--;
-    },
-
-    onPageChange(page) {
-      this.currentMoviePage = page;
     },
 
     moveToMovie() {
@@ -154,10 +268,9 @@ export default {
   created() {
     this.getPopularMovies();
     this.getPopularSeries();
+    this.getLiveMovies();
   },
 };
 </script>
 <style>
-
-
 </style>

@@ -11,8 +11,8 @@
       label="Search"
       loading
       append-inner-icon="mdi-magnify"
-      @click:append-inner="getMovie()"
-      
+      @click:append-inner="getSearch()"
+
 
     >
       <template v-slot:loader>
@@ -29,14 +29,14 @@
 
     <v-row justify="center">
       <v-col
-        v-for="(movie, indice) in movies"
+        v-for="(card, indice) in movies"
         :key="indice"
         cols="12"
         sm="6"
         md="4"
         lg="3"
       >
-        <movie-card :movie="movie"></movie-card>
+        <card :card="card"></card>
       </v-col>
     </v-row>
   </v-container>
@@ -45,12 +45,12 @@
 
 <script>
 import axios from 'axios';
-import MovieCard from "../movie/MovieCard.vue";
+import Card from "../card/Card.vue";
 
 export default {
   name: "Search",
   components: {
-    MovieCard,
+    Card,
   },
 
   data() {
@@ -77,7 +77,7 @@ export default {
   },
 
   methods: {
-    async getMovie() {
+    async getSearch() {
       try {
         const searchWithQueryUrl = `${this.searchURL}?${this.apiKey}&query=${this.query}`;
         // const searchWithQueryUrl = `${this.moviesURL}top_rated?${this.apiKey}`;
@@ -93,7 +93,7 @@ export default {
   },
 
   created() {
-    // this.getMovie();
+
   },
 };
 </script>

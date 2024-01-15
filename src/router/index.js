@@ -11,11 +11,11 @@ const routes = [
         name: 'HomeView',
         component: () => import('@/views/HomeView.vue'),
       },
-      {
-        path: '/movie/:id',
-        name: 'MovieView',
-        component: () => import('@/views/movie/MovieView.vue'),
-      },
+      // {
+      //   path: '/movie/:id',
+      //   name: 'MovieView',
+      //   component: () => import('@/views/movie/MovieView.vue'),
+      // },
       {
         path: 'search',
         name: 'SearchView',

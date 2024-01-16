@@ -1,6 +1,6 @@
 <template>
-  <p class="text-h5 font-weight-bold mb-2 mt-2">Popular Movies</p>
-  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background height="200">
+  <p class="text-h5 font-weight-bold mb-2">Live Now</p>
+  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background>
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
         <v-icon> mdi-chevron-left </v-icon>
@@ -12,8 +12,8 @@
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
-            height="180"
-            :image="imageUrl + movie.backdrop_path"
+            height="400"
+            :image="imageUrl + movie.poster_path"
             max-width="400"
             class="mx-auto"
             style="
@@ -40,7 +40,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: "PopularMovie",
+  name: "LiveMovie",
 
   components: {
   },
@@ -50,10 +50,10 @@ export default {
       const startIndex = (this.moviePage - 1) * 4;
       const endIndex = startIndex + 4;
 
-      return this.popularMovies.slice(startIndex, endIndex);
+      return this.liveMovies.slice(startIndex, endIndex);
     },
     movieCarousel() {
-      return (this.popularMovies.length / 4) - 1;
+      return (this.liveMovies.length / 4) - 1;
     },
   },
 
@@ -62,19 +62,19 @@ export default {
       moviesURL: import.meta.env.VITE_API_MOVIE,
       imageUrl: import.meta.env.VITE_IMG,
       ApiKey: import.meta.env.VITE_API_KEY,
-      popularMovies: [],
+      liveMovies: [],
       moviePage: 1,
     };
   },
 
   methods: {
-    async getPopularMovies() {
+    async getLiveMovies() {
       try {
-        const url = `${this.moviesURL}popular?${this.ApiKey}`;
+        const url = `${this.moviesURL}now_playing?${this.ApiKey}`;
 
         const response = await axios.get(url);
-        this.popularMovies = response.data.results;
-        return this.popularMovies;
+        this.liveMovies = response.data.results;
+        return this.liveMovies;
       } catch (error) {
         console.error(error);
       }
@@ -95,7 +95,7 @@ export default {
     },
   },
   created() {
-    this.getPopularMovies();
+    this.getLiveMovies();
   },
 };
 </script>

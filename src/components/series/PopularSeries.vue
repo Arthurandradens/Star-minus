@@ -1,19 +1,19 @@
 <template>
-  <p class="text-h5 font-weight-bold mb-2 mt-2">Popular Movies</p>
-  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background height="200">
+  <p class="text-h5 font-weight-bold mb-2 mt-2">Popular Series</p>
+  <v-carousel v-model="seriesPage" hideDelimiters hide-delimiter-background height="200" >
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
         <v-icon> mdi-chevron-left </v-icon>
       </v-btn>
     </template>
     <v-row justify="center">
-      <v-col v-for="(movie, indice) in paginateCard" :key="indice">
+      <v-col v-for="(series, indice) in paginateCard" :key="indice">
         <v-hover v-slot="{ isHoverig, props }">
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
             height="180"
-            :image="imageUrl + movie.backdrop_path"
+            :image="imageUrl + series.backdrop_path"
             max-width="400"
             class="mx-auto"
             style="
@@ -40,62 +40,61 @@
 <script>
 import axios from "axios";
 export default {
-  name: "PopularMovie",
+  name: "PopularSeries",
 
-  components: {
-  },
+  components: {},
 
   computed: {
     paginateCard() {
-      const startIndex = (this.moviePage - 1) * 4;
+      const startIndex = (this.seriesPage - 1) * 4;
       const endIndex = startIndex + 4;
 
-      return this.popularMovies.slice(startIndex, endIndex);
+      return this.popularSeries.slice(startIndex, endIndex);
     },
-    movieCarousel() {
-      return (this.popularMovies.length / 4) - 1;
+    seriesCarousel() {
+      return this.popularSeries.length / 4 - 1;
     },
   },
 
   data() {
     return {
-      moviesURL: import.meta.env.VITE_API_MOVIE,
+      seriesURL: import.meta.env.VITE_API_SERIES,
       imageUrl: import.meta.env.VITE_IMG,
       ApiKey: import.meta.env.VITE_API_KEY,
-      popularMovies: [],
-      moviePage: 1,
+      popularSeries: [],
+      seriesPage: 1,
     };
   },
 
   methods: {
-    async getPopularMovies() {
+    async getPopularSeries() {
       try {
-        const url = `${this.moviesURL}popular?${this.ApiKey}`;
+        const url = `${this.seriesURL}popular?${this.ApiKey}`;
 
         const response = await axios.get(url);
-        this.popularMovies = response.data.results;
-        return this.popularMovies;
+        this.popularSeries = response.data.results;
+        return this.popularSeries;
       } catch (error) {
         console.error(error);
       }
     },
 
     nextSlide() {
-      if (this.moviePage > this.movieCarousel) {
-        this.moviePage = 0;
+      if (this.seriesPage > this.seriesCarousel) {
+        this.seriesPage = 0;
       }
-      return this.moviePage++;
+      return this.seriesPage++;
     },
 
     prevSlide() {
-      if (this.moviePage == 1) {
-        this.moviePage = this.movieCarousel + 2;
+      if (this.seriesPage == 1) {
+        this.seriesPage = this.seriesCarousel + 2;
       }
-      return this.moviePage--;
+      return this.seriesPage--;
     },
   },
   created() {
-    this.getPopularMovies();
+    this.getPopularSeries();
   },
 };
 </script>

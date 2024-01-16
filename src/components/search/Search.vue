@@ -1,5 +1,5 @@
 <template>
-  <v-container >
+  <v-container>
     <!-- <h1>
       Results for :
       <span style="color: #004d40" class="query-text">{{ query }}</span>
@@ -12,8 +12,7 @@
       loading
       append-inner-icon="mdi-magnify"
       @click:append-inner="getSearch()"
-
-
+      @keyup.enter="getSearch()"
     >
       <template v-slot:loader>
         <v-progress-linear
@@ -44,7 +43,7 @@
 
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import Card from "../card/Card.vue";
 
 export default {
@@ -62,6 +61,7 @@ export default {
       query: "",
       moviesURL: import.meta.env.VITE_API_MOVIE,
       searchURL: import.meta.env.VITE_SEARCH,
+      trendingUrl: import.meta.env.VITE_API_ALL,
       apiKey: import.meta.env.VITE_API_KEY,
     };
   },
@@ -78,6 +78,9 @@ export default {
 
   methods: {
     async getSearch() {
+      if (this.query === "") {
+        return this.getAll();
+      }
       try {
         const searchWithQueryUrl = `${this.searchURL}?${this.apiKey}&query=${this.query}`;
         // const searchWithQueryUrl = `${this.moviesURL}top_rated?${this.apiKey}`;
@@ -90,10 +93,16 @@ export default {
       }
     },
 
+    async getAll() {
+      const trendingAllUrl = `${this.trendingUrl}${this.apiKey}`;
+
+      const response = await axios.get(trendingAllUrl);
+      this.movies = response.data.results;
+    },
   },
 
   created() {
-
+    this.getAll();
   },
 };
 </script>

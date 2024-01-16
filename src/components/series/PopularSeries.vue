@@ -1,5 +1,5 @@
 <template>
-  <p class="text-h5 font-weight-bold mb-2 mt-2">Popular Series</p>
+  <p class="title">Popular Series</p>
   <v-carousel v-model="seriesPage" hideDelimiters hide-delimiter-background height="200" >
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">

@@ -1,6 +1,12 @@
 <template>
-  <p class="text-h5 font-weight-bold mb-2 mt-2">Popular Movies</p>
-  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background height="200">
+  <p class="title">Popular Movies</p>
+  <v-carousel
+    class="movie-container"
+    v-model="moviePage"
+    hideDelimiters
+    hide-delimiter-background
+    height="200"
+  >
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
         <v-icon> mdi-chevron-left </v-icon>
@@ -42,8 +48,7 @@ import axios from "axios";
 export default {
   name: "PopularMovie",
 
-  components: {
-  },
+  components: {},
 
   computed: {
     paginateCard() {
@@ -53,7 +58,7 @@ export default {
       return this.popularMovies.slice(startIndex, endIndex);
     },
     movieCarousel() {
-      return (this.popularMovies.length / 4) - 1;
+      return this.popularMovies.length / 4 - 1;
     },
   },
 
@@ -99,3 +104,14 @@ export default {
   },
 };
 </script>
+<style>
+.title {
+  font-size: 1.7rem;
+  font-family: "Oswald", sans-serif;
+  margin-top: 1rem;
+}
+.movie-container {
+  position: relative;
+  z-index: 1;
+}
+</style>

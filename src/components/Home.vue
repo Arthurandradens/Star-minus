@@ -1,41 +1,41 @@
 <template>
-  <div
-    v-if="liveMovies != ''"
-    style="
-      display: flex;
-      justify-content: center;
-      width: 100%; /* Define a largura como 100% */
-    "
-  >
-    <img
-      width="1000"
-      src="https://2.bp.blogspot.com/-TY9jRNnFMw4/Tmfc8eNGDtI/AAAAAAAAGFo/PnqTFltxw_g/s1600/x-big+banner.jpg"
-      alt=""
-      style="width: 100%; max-width: 1000px; /* Adiciona estilos para garantir que a imagem não ultrapasse 1000px */"
-    />
-  </div>
-  <v-container>
+  <v-container fluid>
+    <v-card
+      v-if="liveMovies != ''"
+      class="mx-auto"
+      height="650"
+      :image="imageUrl + liveMovies[4].backdrop_path"
+    >
+      <span style="font-size: 3rem; font-family: lemon; color: black">{{
+        liveMovies[4].title
+      }}</span>
+    </v-card>
+
     <popular-movie></popular-movie>
     <popular-series></popular-series>
     <live-movies></live-movies>
+    <top-rated-movies></top-rated-movies>
+    <live-series></live-series>
   </v-container>
 </template>
 
 
 <script>
-import Card from "@/components/card/Card.vue";
 import LiveMovies from "@/components/movie/LiveMovies.vue";
 import PopularMovie from "@/components/movie/PupularMovie.vue";
+import TopRatedMovies from "@/components/movie/TopRatedMovies.vue";
+import LiveSeries from "@/components/series/LiveSeries.vue";
 import PopularSeries from "@/components/series/PopularSeries.vue";
 import axios from "axios";
 
 export default {
   name: "Home",
   components: {
-    Card,
     PopularMovie,
     PopularSeries,
     LiveMovies,
+    LiveSeries,
+    TopRatedMovies,
   },
 
   computed: {},
@@ -48,6 +48,8 @@ export default {
       liveMovies: [],
       currentLiveMoviePage: 1,
       pageSize: 4,
+      banner:
+        "https://2.bp.blogspot.com/-TY9jRNnFMw4/Tmfc8eNGDtI/AAAAAAAAGFo/PnqTFltxw_g/s1600/x-big+banner.jpg",
     };
   },
 
@@ -70,4 +72,5 @@ export default {
 };
 </script>
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Lemon&family=Montserrat:wght@400;700&family=Oswald:wght@300&display=swap");
 </style>

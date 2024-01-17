@@ -28,7 +28,7 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="fazAlgo()"
+            @click="moveToCard(movie.id)"
           >
           </v-card>
         </v-hover>
@@ -98,6 +98,10 @@ export default {
       }
       return this.moviePage--;
     },
+
+    moveToCard(id) {
+      this.$router.push(`/card/${id}`)
+    }
   },
   created() {
     this.getPopularMovies();

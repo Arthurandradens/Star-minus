@@ -100,7 +100,7 @@ export default {
     },
 
     moveToCard(id) {
-      this.$router.push(`/card/:${id}`)
+      this.$router.push(`/card/${id}`)
     }
   },
   created() {

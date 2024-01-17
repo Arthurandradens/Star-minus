@@ -28,7 +28,7 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="fazAlgo()"
+            @click="moveToCard(movie.id)"
           >
           </v-card>
         </v-hover>
@@ -98,6 +98,10 @@ export default {
       }
       return this.moviePage--;
     },
+
+    moveToCard(id) {
+      this.$router.push(`/card/:${id}`)
+    }
   },
   created() {
     this.getPopularMovies();
@@ -108,7 +112,8 @@ export default {
 .title {
   font-size: 1.7rem;
   font-family: "Oswald", sans-serif;
-  margin-top: 1rem;
+  margin: 1rem;
+
 }
 .movie-container {
   position: relative;

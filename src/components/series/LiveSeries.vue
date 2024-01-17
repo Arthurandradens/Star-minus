@@ -1,5 +1,5 @@
 <template>
-  <p class="title">On the air</p>
+  <p class="title-poster">On the air</p>
   <v-carousel
     v-model="seriesPage"
     hideDelimiters

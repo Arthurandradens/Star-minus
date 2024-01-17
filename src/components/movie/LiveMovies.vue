@@ -1,5 +1,5 @@
 <template>
-  <p class="title">Live Now</p>
+  <p class="title-poster">Live Now</p>
   <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background>
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
@@ -100,6 +100,12 @@ export default {
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lemon&family=Montserrat:wght@400;700&display=swap');
+.title-poster{
+  font-size: 2rem;
+  font-family: "Oswald", sans-serif;
+  margin-left: 2.5rem;
+  margin-bottom: 1rem;
 
+}
 
 </style>

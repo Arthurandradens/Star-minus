@@ -26,7 +26,7 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="fazAlgo()"
+            @click="moveToCard(series.id)"
           >
           </v-card>
         </v-hover>
@@ -96,6 +96,10 @@ export default {
       }
       return this.seriesPage--;
     },
+
+    moveToCard(id) {
+      this.$router.push(`/card/${id}`)
+    }
   },
   created() {
     this.getLiveSeries();

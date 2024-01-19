@@ -15,7 +15,12 @@
           max-width="800"
           v-if="card != ''"
         >
-          <v-card-title class="title ml-1 mb-2">{{ card.title }}</v-card-title>
+          <v-card-title v-if="type === 'movie'" class="title ml-1 mb-2">{{
+            card.title
+          }}</v-card-title>
+          <v-card-title v-if="type === 'series'" class="title ml-1 mb-2">{{
+            card.name
+          }}</v-card-title>
 
           <v-row>
             <v-col>
@@ -31,11 +36,29 @@
                   divider=","
                 ></v-breadcrumbs>
               </v-card-text>
-              <v-card-text>
+              <v-card-text v-if="type === 'movie'">
+                <span class="subtitle">Time : </span>
+                <span class="text">{{ getTime(card.runtime) }}</span>
+              </v-card-text>
+              <v-card-text v-if="type === 'series'">
+                <span class="subtitle">Seasons : </span>
+                <span class="text">{{ card.number_of_seasons }}</span>
+              </v-card-text>
+              <v-card-text v-if="type === 'series'">
+                <span class="subtitle">Episodes : </span>
+                <span class="text">{{ card.number_of_episodes }}</span>
+              </v-card-text>
+              <v-card-text v-if="type === 'series'">
+                <span class="subtitle">Release Date : </span>
+                <span class="text">{{
+                  card.first_air_date.replace(/-/g, "/")
+                }}</span>
+              </v-card-text>
+              <v-card-text v-if="type === 'movie'">
                 <span class="subtitle">Budget : </span>
                 <span class="text">{{ formatCurrency(card.budget) }}</span>
               </v-card-text>
-              <v-card-text>
+              <v-card-text v-if="type === 'movie'">
                 <span class="subtitle">Release Date :</span>
                 <span class="text">{{
                   card.release_date.replace(/-/g, "/")
@@ -43,7 +66,7 @@
               </v-card-text>
               <v-card-text>
                 <v-icon class="mr-1 mb-1">mdi-star</v-icon>
-                <span class="text">{{ card.vote_average }}</span>
+                <span class="text">{{ card.vote_average.toFixed(1) }}</span>
               </v-card-text>
             </v-col>
 
@@ -56,7 +79,13 @@
           </v-row>
           <v-card-actions class="">
             <v-col>
-              <v-btn color="primary" variant="elevated" @click="goToTrailer()" block>Trailer</v-btn>
+              <v-btn
+                color="primary"
+                variant="elevated"
+                @click="goToTrailer()"
+                block
+                >Trailer</v-btn
+              >
             </v-col>
             <v-col>
               <v-btn
@@ -70,6 +99,19 @@
           </v-card-actions>
         </v-card>
       </v-col>
+      <v-dialog v-model="dialog">
+        <v-card class="mx-auto" variant="text">
+          <iframe
+            width="560"
+            height="315"
+            :src="trailerUrl"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </v-card>
+      </v-dialog>
     </v-row>
   </v-container>
 </template>
@@ -81,23 +123,35 @@ export default {
   data() {
     return {
       movieUrl: import.meta.env.VITE_API_MOVIE,
+      seriesURL: import.meta.env.VITE_API_SERIES,
       ApiKey: import.meta.env.VITE_API_KEY,
       imageUrl: import.meta.env.VITE_IMG,
       card: [],
       genres: [],
       trailer: [],
+      trailerUrl: "",
+      dialog: false,
+      id: this.$route.params.id,
+      type: this.$route.query.type,
     };
   },
 
   methods: {
     async getInfoCard() {
       try {
-        const id = this.$route.params.id;
-        const url = `${this.movieUrl}${id}?${this.ApiKey}`;
-
-        const response = await axios.get(url);
-        this.card = response.data;
-        this.getCardGenres();
+        if (this.type === "movie") {
+          const url = `${this.movieUrl}${this.id}?${this.ApiKey}`;
+          const response = await axios.get(url);
+          this.card = response.data;
+          this.getCardGenres();
+          this.getCardTrailer();
+        } else if (this.type === "series") {
+          const url = `${this.seriesURL}${this.id}?${this.ApiKey}`;
+          const response = await axios.get(url);
+          this.card = response.data;
+          this.getCardGenres();
+          this.getCardTrailer();
+        }
       } catch (error) {
         console.error(error);
       }
@@ -105,21 +159,35 @@ export default {
 
     async getCardTrailer() {
       try {
-        const id = this.$route.params.id;
-        const url = `${this.movieUrl}${id}/videos?${this.ApiKey}`;
+        if (this.type === "movie") {
+          const url = `${this.movieUrl}${this.id}/videos?${this.ApiKey}`;
+          const response = await axios.get(url);
+          this.trailer = response.data.results;
+          console.log(this.trailer);
+        } else if (this.type === "series") {
+          const url = `${this.seriesURL}${this.id}/videos?${this.ApiKey}`;
+          const response = await axios.get(url);
+          this.trailer = response.data.results;
 
-        const response = await axios.get(url);
-        this.trailer = response.data.results;
+          console.log(this.trailer);
+        }
       } catch (error) {
         console.error(error);
       }
     },
 
     goToTrailer() {
-      if (this.trailer != []) {
-        const trailerKey = this.trailer[1].key;
-        const trailerUrl = `https://www.youtube.com/watch?v=${trailerKey}`;
-        window.open(trailerUrl, "_blank");
+      if (this.trailer != "") {
+        this.dialog = true;
+        for (let i = 0; i < this.trailer.length; i++) {
+          if (this.trailer[i].type === "Trailer") {
+            const trailerKey = this.trailer[i].key;
+
+            // const trailerUrl = `https://www.youtube.com/watch?v=${trailerKey}`;
+            return (this.trailerUrl = `https://www.youtube.com/embed/${trailerKey}`);
+            // return window.open(trailerUrl, "_blank");
+          }
+        }
       } else {
         alert("nenhum trailer disponivel");
       }
@@ -154,12 +222,18 @@ export default {
         currency: "USD",
       });
     },
+
+    getTime(time) {
+      const hour = Math.trunc(time / 60);
+      const minute = time % 60;
+
+      return `${hour}H ${minute}min`;
+    },
   },
 
   created() {
     this.getInfoCard();
     // this.getCardImage();
-    this.getCardTrailer()
   },
 };
 </script>

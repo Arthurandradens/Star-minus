@@ -26,7 +26,7 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="moveToCard(series.id)"
+            @click="moveToCard(series.id,'series')"
           >
           </v-card>
         </v-hover>
@@ -97,8 +97,8 @@ export default {
       return this.seriesPage--;
     },
 
-    moveToCard(id) {
-      this.$router.push(`/card/${id}`)
+    moveToCard(id,type) {
+      this.$router.push({path:`/card/${id}`, query: {type: type}})
     }
   },
   created() {

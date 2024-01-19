@@ -22,7 +22,7 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="moveToCard(movie.id)"
+            @click="moveToCard(movie.id,'movie')"
           >
           </v-card>
         </v-hover>
@@ -93,8 +93,8 @@ export default {
       return this.moviePage--;
     },
 
-    moveToCard(id) {
-      this.$router.push(`/card/${id}`)
+    moveToCard(id,type) {
+      this.$router.push({path:`/card/${id}`, query: {type: type}})
     }
   },
   created() {

@@ -35,7 +35,24 @@
         md="4"
         lg="3"
       >
-        <card :card="card"></card>
+        <v-hover v-slot="{ isHoverig, props }">
+          <v-card
+            v-bind="props"
+            :elevation="isHoverig ? 6 : 24"
+            height="400"
+            :image="imageUrl + card.poster_path"
+            max-width="400"
+            class="mx-auto"
+            style="
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+            "
+            variant="text"
+            @click="moveToCard(card.id)"
+          >
+          </v-card>
+        </v-hover>
       </v-col>
     </v-row>
   </v-container>
@@ -59,6 +76,7 @@ export default {
       movies: [],
       setMovies: [],
       query: "",
+      imageUrl: import.meta.env.VITE_IMG,
       moviesURL: import.meta.env.VITE_API_MOVIE,
       searchURL: import.meta.env.VITE_SEARCH,
       trendingUrl: import.meta.env.VITE_API_ALL,
@@ -82,11 +100,12 @@ export default {
         return this.getAll();
       }
       try {
-        const searchWithQueryUrl = `${this.searchURL}?${this.apiKey}&query=${this.query}`;
-        // const searchWithQueryUrl = `${this.moviesURL}top_rated?${this.apiKey}`;
+        const searchMovieQueryUrl = `${this.searchURL}movie?${this.apiKey}&query=${this.query}`;
+        const searchSeriesQueryUrl = `${this.searchURL}tv?${this.apiKey}&query=${this.query}`;
 
-        const response = await axios.get(searchWithQueryUrl);
-        this.movies = response.data.results;
+        const response = await axios.get(searchMovieQueryUrl);
+        const response2 = await axios.get(searchSeriesQueryUrl);
+        this.movies = response.data.results.concat(response2.data.results);
         return this.movies;
       } catch (error) {
         console.error(error);
@@ -98,6 +117,15 @@ export default {
 
       const response = await axios.get(trendingAllUrl);
       this.movies = response.data.results;
+    },
+    /**
+     *
+     * CORRIGIR ESSE METODO
+     *
+     */
+    moveToCard(id, type) {
+      console.log(this.movies)
+      // this.$router.push({ path: `/card/${id}`, query: { type: type } });
     },
   },
 

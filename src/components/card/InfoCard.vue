@@ -77,25 +77,37 @@
               </v-card-text>
             </v-col>
           </v-row>
-          <v-card-actions class="">
-            <v-col>
-              <v-btn
-                color="primary"
-                variant="elevated"
-                @click="goToTrailer()"
-                block
-                >Trailer</v-btn
-              >
-            </v-col>
-            <v-col>
-              <v-btn
-                color="primary"
-                variant="elevated"
-                block
-                @click="homepage(card.homepage)"
-                >Page</v-btn
-              >
-            </v-col>
+          <v-card-actions class="d-flex align-center justify-end">
+            <v-row>
+              <v-col>
+                <v-btn
+                  color="primary"
+                  variant="elevated"
+                  block
+                  prepend-icon="mdi-arrow-left"
+                  @click="backPage()"
+                  >Back</v-btn
+                >
+              </v-col>
+              <v-col>
+                <v-btn
+                  color="primary"
+                  variant="elevated"
+                  @click="goToTrailer()"
+                  block
+                  >Trailer</v-btn
+                >
+              </v-col>
+              <v-col>
+                <v-btn
+                  color="primary"
+                  variant="elevated"
+                  block
+                  @click="homepage(card.homepage)"
+                  >Page</v-btn
+                >
+              </v-col>
+            </v-row>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -133,6 +145,8 @@ export default {
       dialog: false,
       id: this.$route.params.id,
       type: this.$route.query.type,
+      path: this.$route.query.thisPath,
+      query: this.$route.query.value,
     };
   },
 
@@ -163,13 +177,10 @@ export default {
           const url = `${this.movieUrl}${this.id}/videos?${this.ApiKey}`;
           const response = await axios.get(url);
           this.trailer = response.data.results;
-          console.log(this.trailer);
         } else if (this.type === "series") {
           const url = `${this.seriesURL}${this.id}/videos?${this.ApiKey}`;
           const response = await axios.get(url);
           this.trailer = response.data.results;
-
-          console.log(this.trailer);
         }
       } catch (error) {
         console.error(error);
@@ -229,10 +240,19 @@ export default {
 
       return `${hour}H ${minute}min`;
     },
+
+    backPage() {
+      if (this.path === "/search") {
+        this.$router.push({ path: this.path, query: { value: this.query } });
+      } else {
+        window.history.back();
+      }
+    },
   },
 
   created() {
     this.getInfoCard();
+    console.log(this.$route.query.value);
     // this.getCardImage();
   },
 };

@@ -40,7 +40,6 @@
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
             height="400"
-            :image="imageUrl + card.poster_path"
             max-width="400"
             class="mx-auto"
             style="
@@ -51,6 +50,15 @@
             variant="text"
             @click="moveToCard(card.id)"
           >
+            <v-img
+              v-if="card.poster_path"
+              :src="imageUrl + card.poster_path"
+            ></v-img>
+            <v-card-title class="mx-auto title align-center" v-else
+              >Imagem <br />
+              Não <br />
+              Disponível</v-card-title
+            >
           </v-card>
         </v-hover>
       </v-col>
@@ -75,12 +83,13 @@ export default {
       custom: false,
       movies: [],
       setMovies: [],
-      query: "",
+      query: this.$route.query.value,
       imageUrl: import.meta.env.VITE_IMG,
       moviesURL: import.meta.env.VITE_API_MOVIE,
       searchURL: import.meta.env.VITE_SEARCH,
       trendingUrl: import.meta.env.VITE_API_ALL,
       apiKey: import.meta.env.VITE_API_KEY,
+      id: null,
     };
   },
 
@@ -96,7 +105,7 @@ export default {
 
   methods: {
     async getSearch() {
-      if (this.query === "") {
+      if (this.query === undefined) {
         return this.getAll();
       }
       try {
@@ -118,20 +127,46 @@ export default {
       const response = await axios.get(trendingAllUrl);
       this.movies = response.data.results;
     },
+
+    getType(id) {
+      for (let i = 0; i < this.movies.length; i++) {
+        if (this.movies[i].id === id) {
+          if (this.movies[i].title) {
+            return "movie";
+          } else if (this.movies[i].name) {
+            return "series";
+          }
+        }
+      }
+    },
     /**
      *
      * CORRIGIR ESSE METODO
      *
      */
-    moveToCard(id, type) {
-      console.log(this.movies)
-      // this.$router.push({ path: `/card/${id}`, query: { type: type } });
+    moveToCard(id) {
+      const type = this.getType(id);
+      this.$router.push({
+        path: `/card/${id}`,
+        query: {
+          type: type,
+          value: this.query,
+          thisPath: window.location.pathname,
+        },
+      });
     },
   },
 
   created() {
-    this.getAll();
+    this.getSearch();
   },
 };
 </script>
+<style>
+.title {
+  font-size: 1.7rem;
+  font-family: "Oswald", sans-serif;
+  margin: 1rem;
+}
+</style>
 

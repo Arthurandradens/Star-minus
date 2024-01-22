@@ -1,6 +1,12 @@
 <template>
-  <p class="title-poster">Live Now</p>
-  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background>
+  <p class="title">Up Coming</p>
+  <v-carousel
+    class="movie-container"
+    v-model="moviePage"
+    hideDelimiters
+    hide-delimiter-background
+    height="200"
+  >
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
         <v-icon> mdi-chevron-left </v-icon>
@@ -12,9 +18,9 @@
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
-            height="500"
-            :image="imageUrl + movie.poster_path"
-            max-width="350"
+            height="180"
+            :image="imageUrl + movie.backdrop_path"
+            max-width="400"
             class="mx-auto"
             style="
               display: flex;
@@ -40,7 +46,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: "LiveMovie",
+  name: "TopŔatedMovies",
 
   components: {},
 
@@ -67,9 +73,9 @@ export default {
   },
 
   methods: {
-    async getLiveMovies() {
+    async getUpComingMovies() {
       try {
-        const url = `${this.moviesURL}now_playing?${this.ApiKey}`;
+        const url = `${this.moviesURL}upcoming?${this.ApiKey}`;
 
         const response = await axios.get(url);
         this.movies = response.data.results;
@@ -98,18 +104,10 @@ export default {
     }
   },
   created() {
-    this.getLiveMovies();
+    this.getUpComingMovies();
   },
 };
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Lemon&family=Montserrat:wght@400;700&display=swap');
-.title-poster{
-  font-size: 2rem;
-  font-family: "Oswald", sans-serif;
-  margin-left: 2.5rem;
-  margin-bottom: 1rem;
-
-}
 
 </style>

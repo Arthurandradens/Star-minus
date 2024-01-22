@@ -12,10 +12,13 @@
     </v-card>
 
     <popular-movie></popular-movie>
-    <popular-series></popular-series>
     <live-movies></live-movies>
+    <popular-series></popular-series>
+    <top-rated-series></top-rated-series>
     <top-rated-movies></top-rated-movies>
     <live-series></live-series>
+    <up-coming></up-coming>
+    <live-today-series></live-today-series>
   </v-container>
 </template>
 
@@ -24,8 +27,11 @@
 import LiveMovies from "@/components/movie/LiveMovies.vue";
 import PopularMovie from "@/components/movie/PupularMovie.vue";
 import TopRatedMovies from "@/components/movie/TopRatedMovies.vue";
+import UpComing from "@/components/movie/UpComing.vue"
 import LiveSeries from "@/components/series/LiveSeries.vue";
 import PopularSeries from "@/components/series/PopularSeries.vue";
+import TopRatedSeries from "@/components/series/TopRatedSeries.vue"
+import LiveTodaySeries from "@/components/series/LiveTodaySeries.vue"
 import axios from "axios";
 
 export default {
@@ -36,6 +42,9 @@ export default {
     LiveMovies,
     LiveSeries,
     TopRatedMovies,
+    UpComing,
+    TopRatedSeries,
+    LiveTodaySeries
   },
 
   computed: {},

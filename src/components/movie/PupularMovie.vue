@@ -55,10 +55,10 @@ export default {
       const startIndex = (this.moviePage - 1) * 4;
       const endIndex = startIndex + 4;
 
-      return this.popularMovies.slice(startIndex, endIndex);
+      return this.movies.slice(startIndex, endIndex);
     },
     movieCarousel() {
-      return this.popularMovies.length / 4 - 1;
+      return this.movies.length / 4 - 1;
     },
   },
 
@@ -67,7 +67,7 @@ export default {
       moviesURL: import.meta.env.VITE_API_MOVIE,
       imageUrl: import.meta.env.VITE_IMG,
       ApiKey: import.meta.env.VITE_API_KEY,
-      popularMovies: [],
+      movies: [],
       moviePage: 1,
     };
   },
@@ -78,8 +78,8 @@ export default {
         const url = `${this.moviesURL}popular?${this.ApiKey}`;
 
         const response = await axios.get(url);
-        this.popularMovies = response.data.results;
-        return this.popularMovies;
+        this.movies = response.data.results;
+        return this.movies;
       } catch (error) {
         console.error(error);
       }

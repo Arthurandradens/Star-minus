@@ -1,20 +1,20 @@
 <template>
-  <p class="title-poster">Live Now</p>
-  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background>
+  <p class="title">Airing Today Series</p>
+  <v-carousel v-model="seriesPage" hideDelimiters hide-delimiter-background height="200" >
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
         <v-icon> mdi-chevron-left </v-icon>
       </v-btn>
     </template>
     <v-row justify="center">
-      <v-col v-for="(movie, indice) in paginateCard" :key="indice">
+      <v-col v-for="(series, indice) in paginateCard" :key="indice">
         <v-hover v-slot="{ isHoverig, props }">
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
-            height="500"
-            :image="imageUrl + movie.poster_path"
-            max-width="350"
+            height="180"
+            :image="imageUrl + series.backdrop_path"
+            max-width="400"
             class="mx-auto"
             style="
               display: flex;
@@ -22,7 +22,7 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="moveToCard(movie.id,'movie')"
+            @click="moveToCard(series.id,'series')"
           >
           </v-card>
         </v-hover>
@@ -36,61 +36,60 @@
   </v-carousel>
 </template>
 
-
 <script>
 import axios from "axios";
 export default {
-  name: "LiveMovie",
+  name: "TopRatedSeries",
 
   components: {},
 
   computed: {
     paginateCard() {
-      const startIndex = (this.moviePage - 1) * 4;
+      const startIndex = (this.seriesPage - 1) * 4;
       const endIndex = startIndex + 4;
 
-      return this.movies.slice(startIndex, endIndex);
+      return this.series.slice(startIndex, endIndex);
     },
-    movieCarousel() {
-      return this.movies.length / 4 - 1;
+    seriesCarousel() {
+      return this.series.length / 4 - 1;
     },
   },
 
   data() {
     return {
-      moviesURL: import.meta.env.VITE_API_MOVIE,
+      seriesURL: import.meta.env.VITE_API_SERIES,
       imageUrl: import.meta.env.VITE_IMG,
       ApiKey: import.meta.env.VITE_API_KEY,
-      movies: [],
-      moviePage: 1,
+      series: [],
+      seriesPage: 1,
     };
   },
 
   methods: {
-    async getLiveMovies() {
+    async getLiveTodaySeries() {
       try {
-        const url = `${this.moviesURL}now_playing?${this.ApiKey}`;
+        const url = `${this.seriesURL}airing_today?${this.ApiKey}`;
 
         const response = await axios.get(url);
-        this.movies = response.data.results;
-        return this.movies;
+        this.series = response.data.results;
+        return this.series;
       } catch (error) {
         console.error(error);
       }
     },
 
     nextSlide() {
-      if (this.moviePage > this.movieCarousel) {
-        this.moviePage = 0;
+      if (this.seriesPage > this.seriesCarousel) {
+        this.seriesPage = 0;
       }
-      return this.moviePage++;
+      return this.seriesPage++;
     },
 
     prevSlide() {
-      if (this.moviePage == 1) {
-        this.moviePage = this.movieCarousel + 2;
+      if (this.seriesPage == 1) {
+        this.seriesPage = this.seriesCarousel + 2;
       }
-      return this.moviePage--;
+      return this.seriesPage--;
     },
 
     moveToCard(id,type) {
@@ -98,18 +97,7 @@ export default {
     }
   },
   created() {
-    this.getLiveMovies();
+    this.getLiveTodaySeries();
   },
 };
 </script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Lemon&family=Montserrat:wght@400;700&display=swap');
-.title-poster{
-  font-size: 2rem;
-  font-family: "Oswald", sans-serif;
-  margin-left: 2.5rem;
-  margin-bottom: 1rem;
-
-}
-
-</style>

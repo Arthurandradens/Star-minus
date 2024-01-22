@@ -61,25 +61,10 @@ export default {
     async onSubmit() {
       if (!this.form) return;
 
-      const options = {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNmU0MDY5ZGMzOTMzMGRiNTc0ZGQ1ZTM3NzM3M2IwMCIsInN1YiI6IjY1OTZiNDc3MGU2NGFmMjk1NThjMWJiMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.oocwUEuplHO10hAehfgFvB7Koyl2Xe5cbuxTYpHh1Bk",
-        },
-      };
-
-      fetch("https://api.themoviedb.org/3/authentication/token/new", options)
-        .then((response) => response.json())
-        .then((response) => this.moveToHome(response.request_token))
-        .catch((err) => console.error(err));
-
       setTimeout(() => (this.loading = false), 2000);
     },
 
     async moveToHome(token) {
-      const response = await axios.get(`https://www.themoviedb.org/authenticate/${token}`)
     },
 
     required(v) {

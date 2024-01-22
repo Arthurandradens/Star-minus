@@ -4,7 +4,7 @@
       Results for :
       <span style="color: #004d40" class="query-text">{{ query }}</span>
     </h1> -->
-    <v-checkbox-btn v-model="custom" label="filter"> </v-checkbox-btn>
+    <v-checkbox-btn v-model="custom" label="Filter"> </v-checkbox-btn>
 
     <v-text-field
       v-model="query"
@@ -14,9 +14,13 @@
       @keyup.enter="getSearch()"
     >
     </v-text-field>
-    <v-combobox>
-      <v-chip>alo</v-chip>
-    </v-combobox>
+    <v-autocomplete
+    v-if="custom"
+    :items="genres"
+    chips
+    multiple>
+
+    </v-autocomplete>
     <v-row justify="center">
       <v-col
         v-for="(card, indice) in movies"
@@ -81,6 +85,7 @@ export default {
       trendingUrl: import.meta.env.VITE_API_ALL,
       apiKey: import.meta.env.VITE_API_KEY,
       id: null,
+      genres: []
     };
   },
 
@@ -119,6 +124,19 @@ export default {
       this.movies = response.data.results;
     },
 
+    async getGenre() {
+      const movieUrl = `https://api.themoviedb.org/3/genre/movie/list?${this.apiKey}`
+      const tvUrl = `https://api.themoviedb.org/3/genre/tv/list?${this.apiKey}`
+      const response = await axios.get(movieUrl)
+      const response2 = await axios.get(tvUrl)
+
+     const genres = response.data.genres.concat(response2.data.genres)
+      for (let i = 0; i < genres.length; i++) {
+          this.genres.push(genres[i].name)
+      }
+      console.log(this.genres)
+    },
+
     getType(id) {
       for (let i = 0; i < this.movies.length; i++) {
         if (this.movies[i].id === id) {
@@ -130,11 +148,7 @@ export default {
         }
       }
     },
-    /**
-     *
-     * CORRIGIR ESSE METODO
-     *
-     */
+
     moveToCard(id) {
       const type = this.getType(id);
       this.$router.push({
@@ -150,6 +164,7 @@ export default {
 
   created() {
     this.getSearch();
+    this.getGenre()
   },
 };
 </script>

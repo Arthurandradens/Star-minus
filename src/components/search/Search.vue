@@ -4,28 +4,19 @@
       Results for :
       <span style="color: #004d40" class="query-text">{{ query }}</span>
     </h1> -->
-    <v-checkbox-btn v-model="custom" label="Searching"> </v-checkbox-btn>
+    <v-checkbox-btn v-model="custom" label="filter"> </v-checkbox-btn>
 
     <v-text-field
       v-model="query"
       label="Search"
-      loading
       append-inner-icon="mdi-magnify"
       @click:append-inner="getSearch()"
       @keyup.enter="getSearch()"
     >
-      <template v-slot:loader>
-        <v-progress-linear
-          :active="custom"
-          :model-value="progress"
-          :color="color"
-          height="7"
-          indeterminate
-        >
-        </v-progress-linear>
-      </template>
     </v-text-field>
-
+    <v-combobox>
+      <v-chip>alo</v-chip>
+    </v-combobox>
     <v-row justify="center">
       <v-col
         v-for="(card, indice) in movies"

@@ -62,7 +62,7 @@ export default {
       items: [
         { text: "Home", icon: "mdi-home", actions: this.moveToHome },
         { text: "Search", icon: "mdi-magnify", actions: this.moveToSearch },
-        { text: "My List", icon: "mdi-plus", actions: "/" },
+        { text: "WATCHLIST", icon: "mdi-plus", actions: this.moveToWatchList },
         { text: "Movies", icon: "mdi-movie-roll", actions: "/" },
         { text: "Series", icon: "mdi-television-classic", actions: "/" },
       ],
@@ -78,11 +78,15 @@ export default {
     },
 
     moveToHome() {
-      this.$router.push(`/`);
+      this.$router.push(`/home`);
     },
 
     moveToSearch() {
       this.$router.push(`/search`);
+    },
+
+    moveToWatchList() {
+      this.$router.push(`/watchlist`);
     },
   },
 

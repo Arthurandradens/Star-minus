@@ -7,7 +7,7 @@ const routes = [
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
-        path: '',
+        path: '/home',
         name: 'HomeView',
         component: () => import('@/views/HomeView.vue'),
       },
@@ -17,10 +17,15 @@ const routes = [
         component: () => import('@/views/card/CardView.vue'),
       },
       {
-        path: 'search',
+        path: '/search',
         name: 'SearchView',
         component: () => import('@/views/search/SearchView.vue'),
       },
+      {
+        path: '/watchlist',
+        name: 'WatchListView',
+        component : () => import('@/views/watchList/WatchListView.vue')
+      }
     ],
   },
 ]

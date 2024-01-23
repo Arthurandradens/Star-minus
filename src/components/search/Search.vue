@@ -85,7 +85,8 @@ export default {
       trendingUrl: import.meta.env.VITE_API_ALL,
       apiKey: import.meta.env.VITE_API_KEY,
       id: null,
-      genres: []
+      genres: [],
+      filter:[]
     };
   },
 
@@ -101,17 +102,20 @@ export default {
 
   methods: {
     async getSearch() {
-      if (this.query === undefined) {
+
+      if ( this.query === undefined || this.query.trim() === '') {
         return this.getAll();
       }
       try {
-        const searchMovieQueryUrl = `${this.searchURL}movie?${this.apiKey}&query=${this.query}`;
-        const searchSeriesQueryUrl = `${this.searchURL}tv?${this.apiKey}&query=${this.query}`;
-
-        const response = await axios.get(searchMovieQueryUrl);
-        const response2 = await axios.get(searchSeriesQueryUrl);
-        this.movies = response.data.results.concat(response2.data.results);
-        return this.movies;
+        // const searchMovieQueryUrl = `${this.searchURL}movie?${this.apiKey}&query=${this.query}`;
+        // const searchSeriesQueryUrl = `${this.searchURL}tv?${this.apiKey}&query=${this.query}`;
+        const url = `${this.searchURL}multi?${this.apiKey}&query=${this.query}`;
+        const response = await axios.get(url)
+        this.movies = response.data.results
+        console.log(this.movies)
+        // const response = await axios.get(searchMovieQueryUrl);
+        // const response2 = await axios.get(searchSeriesQueryUrl);
+        // this.movies = response.data.results.concat(response2.data.results);
       } catch (error) {
         console.error(error);
       }
@@ -134,16 +138,36 @@ export default {
       for (let i = 0; i < genres.length; i++) {
           this.genres.push(genres[i].name)
       }
-      console.log(this.genres)
+    },
+
+    filter(array) {
+      for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array[i].genres.length; j++) {
+          if (array[i].genres[j].name) {
+            this.filter.push(array[i].genres[j].name)
+          }
+        }
+      }
     },
 
     getType(id) {
+      // for (let i = 0; i < this.movies.length; i++) {
+      //   if (this.movies[i].id === id) {
+      //     if (this.movies[i].title) {
+      //       return "movie";
+      //     } else if (this.movies[i].name) {
+      //       return "series";
+      //     }
+      //   }
+      // }
+
       for (let i = 0; i < this.movies.length; i++) {
         if (this.movies[i].id === id) {
-          if (this.movies[i].title) {
-            return "movie";
-          } else if (this.movies[i].name) {
-            return "series";
+          if (this.movies[i].media_type === 'movie') {
+            return "movie"
+          }
+          else if (this.movies[i].media_type === 'tv') {
+            return "series"
           }
         }
       }

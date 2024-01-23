@@ -24,7 +24,7 @@
 
           <v-row>
             <v-col>
-              <v-card-text>
+              <v-card-text v-if="card.spoken_languages[0]">
                 <span class="subtitle">Language : </span>
                 <span class="text">{{ card.spoken_languages[0].name }}</span>
               </v-card-text>

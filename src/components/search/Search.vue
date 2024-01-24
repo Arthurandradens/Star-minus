@@ -86,7 +86,7 @@ export default {
       apiKey: import.meta.env.VITE_API_KEY,
       id: null,
       genres: [],
-      filter:[]
+      filtered:[]
     };
   },
 
@@ -112,7 +112,7 @@ export default {
         const url = `${this.searchURL}multi?${this.apiKey}&query=${this.query}`;
         const response = await axios.get(url)
         this.movies = response.data.results
-        console.log(this.movies)
+        this.filter(this.movies)
         // const response = await axios.get(searchMovieQueryUrl);
         // const response2 = await axios.get(searchSeriesQueryUrl);
         // this.movies = response.data.results.concat(response2.data.results);
@@ -141,13 +141,12 @@ export default {
     },
 
     filter(array) {
+      this.filtered = []
       for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array[i].genres.length; j++) {
-          if (array[i].genres[j].name) {
-            this.filter.push(array[i].genres[j].name)
-          }
-        }
+
+            this.filtered.push(array[i].genre_ids)
       }
+      console.log(this.filtered)
     },
 
     getType(id) {

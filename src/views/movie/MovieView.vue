@@ -2,17 +2,31 @@
   <v-container>
     <v-checkbox-btn v-model="custom" label="Filter"> </v-checkbox-btn>
 
-    <v-autocomplete
-    v-if="custom"
-    :items="genres"
-    chips
-    multiple>
-
-    </v-autocomplete>
+    <v-combobox
+      v-model="filterGenre"
+      v-if="custom"
+      v-model:search="search"
+      :hide-no-data="false"
+      :items="genresName"
+      hide-selected
+      multiple
+      persistent-hint
+      chips
+      closable-chips
+    >
+      <template v-slot:no-data>
+        <v-list-item>
+          <v-list-item-title>
+            No results matching "<strong>{{ search }}</strong
+            >". Press <kbd>enter</kbd> to create a new one
+          </v-list-item-title>
+        </v-list-item>
+      </template>
+    </v-combobox>
 
     <v-row justify="center">
       <v-col
-        v-for="(card, indice) in movies"
+        v-for="(card, indice) in filteredMovies"
         :key="indice"
         cols="12"
         sm="6"
@@ -51,59 +65,118 @@
 </template>
 
 <script >
-import axios from 'axios';
 import Card from "@/components/card/Card.vue";
+import axios from "axios";
 export default {
   name: "MovieView",
 
   components: {
-    Card
+    Card,
   },
   data() {
     return {
+      search: null,
       movies: [],
       genres: [],
+      genresName: [],
+      genresId: [],
+      filterGenre: [],
       custom: false,
       apiKey: import.meta.env.VITE_API_KEY,
       apiUrl: import.meta.env.VITE_API_URL,
       imageUrl: import.meta.env.VITE_IMG,
-    }
+    };
+  },
+  watch: {
+    filterGenre(val) {
+      if (val.length > this.genresName.length) {
+        this.$nextTick(() => this.filterGenre.pop());
+        // this.getID()
+      }
+      // console.log(this.filterGenre);
+      this.getID(this.filterGenre)
+    },
+  },
+
+  computed: {
+      filteredMovies() {
+        if (this.filterGenre.length === 0) {
+          return this.movies
+        }
+        else{
+          const movies = []
+          for (let i = 0; i < this.filterGenre.length; i++) {
+            for (let j = 0; j < this.movies.length; j++) {
+              if (this.movies[j].genres_ids.length > 0) {
+                for (let k = 0; k < this.genres_ids.length; k++) {
+                  this.movies[j].genres_ids[k] === this.filterGenre[i]
+                }
+              }
+            }
+          }
+        }
+      }
   },
 
   methods: {
-
     async getMovies() {
       try {
         const url = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=1`;
-        const url2 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=3`;
-
-
+        const url2 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=2`;
+        const url3 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=3`;
+        const url4 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=4`;
+        const url5 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=5`;
 
         const response = await axios.get(url);
         const response2 = await axios.get(url2);
-        this.movies = response.data.results.concat(response2.data.results);
-        console.log(this.movies);
+        const response3 = await axios.get(url3);
+        const response4 = await axios.get(url4);
+        const response5 = await axios.get(url5);
+
+        const list2 = response2.data.results;
+        const list3 = response3.data.results;
+        const list4 = response4.data.results;
+        const list5 = response5.data.results;
+
+        this.movies = response.data.results.concat(list2, list3, list4, list5);
       } catch (error) {
         console.error(error);
       }
     },
 
     async getGenre() {
-      const movieUrl = `https://api.themoviedb.org/3/genre/movie/list?${this.apiKey}`
-      const response = await axios.get(movieUrl)
+      const movieUrl = `https://api.themoviedb.org/3/genre/movie/list?${this.apiKey}`;
+      const response = await axios.get(movieUrl);
 
-     const genres = response.data.genres
+      const genres = response.data.genres;
       for (let i = 0; i < genres.length; i++) {
-          this.genres.push(genres[i].name)
+        this.genresName.push(genres[i].name);
+        // this.genresId.push(genres[i].id)
       }
+      this.genres = response.data.genres;
+    },
+
+    getID(name) {
+      const uniqueIds = new Set(this.genresId)
+
+      for (let i = 0; i < this.genres.length; i++) {
+        for (let j = 0; j < name.length; j++) {
+          if (this.genres[i].name === name[j]) {
+            // this.genresId.push(this.genres[i].id);
+            uniqueIds.add(this.genres[i].id)
+          }
+        }
+      }
+      this.genresId = Array.from(uniqueIds)
+
+      console.log(this.genresId);
     },
 
     moveToCard(id) {
-      const type = this.getType(id);
       this.$router.push({
         path: `/card/${id}`,
         query: {
-          type: type,
+          type: "movie",
           value: this.query,
           thisPath: window.location.pathname,
         },
@@ -112,8 +185,8 @@ export default {
   },
 
   created() {
-    this.getGenre()
-    this.getMovies()
-  }
+    this.getGenre();
+    this.getMovies();
+  },
 };
 </script>

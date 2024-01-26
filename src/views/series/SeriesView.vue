@@ -35,7 +35,7 @@
 
     <v-row justify="center">
       <v-col
-        v-for="(card, indice) in filteredMovies"
+        v-for="(card, indice) in filteredSeries"
         :key="indice"
         cols="12"
         sm="6"
@@ -79,7 +79,7 @@
 import Card from "@/components/card/Card.vue";
 import axios from "axios";
 export default {
-  name: "MovieView",
+  name: "SeriesView",
 
   components: {
     Card,
@@ -87,9 +87,8 @@ export default {
   data() {
     return {
       search: null,
-      movies: [],
+      series: [],
       genres: [],
-      teste: [],
       genresName: [],
       genresId: [],
       filterGenre: [],
@@ -99,37 +98,40 @@ export default {
       imageUrl: import.meta.env.VITE_IMG,
     };
   },
-  // watch: {
-  //   filterGenre(val) {
-  //     if (val.length > this.genresName.length) {
-  //       this.$nextTick(() => this.filterGenre.pop());
-  //     }
-  //   },
-  // },
+  watch: {
+    filterGenre(val) {
+      if (val.length > this.genresName.length) {
+        this.$nextTick(() => this.filterGenre.pop());
+        // this.getID()
+      }
+      // console.log(this.filterGenre);
+      this.getID(this.filterGenre)
+    },
+  },
 
   computed: {
-      // filteredMovies() {
+      // filteredSeries() {
       //   if (this.filterGenre.length === 0) {
-      //     return this.movies
+      //     return this.series
       //   }
       //   else{
-      //     const movies = []
+      //     const series = []
       //     const newMovies = []
 
       //     for (let i = 0; i < this.filterGenre.length; i++) {
       //       for (let j = 0; j < this.genres.length; j++) {
       //         if (this.genresId[i] === this.genres[j].id) {
-      //           movies.push(this.genres[j].id)
+      //           series.push(this.genres[j].id)
       //         }
       //       }
       //     }
-      //     if (movies.length != 0) {
-      //       for (let i = 0; i < this.movies.length; i++) {
-      //         if (this.movies[i].genre_ids.length != 0) {
-      //           for (let j = 0; j < this.movies[i].genre_ids.length; j++) {
-      //            for (let k = 0; k < movies.length; k++) {
-      //             if (this.movies[i].genre_ids[j] === movies[k]) {
-      //               newMovies.push(this.movies[i])
+      //     if (series.length != 0) {
+      //       for (let i = 0; i < this.series.length; i++) {
+      //         if (this.series[i].genre_ids.length != 0) {
+      //           for (let j = 0; j < this.series[i].genre_ids.length; j++) {
+      //            for (let k = 0; k < series.length; k++) {
+      //             if (this.series[i].genre_ids[j] === series[k]) {
+      //               newMovies.push(this.series[i])
       //             }
       //            }
       //           }
@@ -139,15 +141,15 @@ export default {
       //     return newMovies
       //   }
     // }
-    filteredMovies() {
+    filteredSeries() {
     if (this.filterGenre.length === 0) {
-      return this.movies;
+      return this.series;
     } else {
       const selectedGenreIds = this.genres
         .filter(genre => this.filterGenre.includes(genre.name))
         .map(genre => genre.id);
 
-      const newMovies = this.movies.filter(movie => {
+      const newMovies = this.series.filter(movie => {
         const intersection = movie.genre_ids.filter(id =>
           selectedGenreIds.includes(id)
         );
@@ -162,11 +164,11 @@ export default {
   methods: {
     async getMovies() {
       try {
-        const url = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=1`;
-        const url2 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=2`;
-        const url3 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=3`;
-        const url4 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=4`;
-        const url5 = `${this.apiUrl}trending/movie/week?${this.apiKey}&page=5`;
+        const url = `${this.apiUrl}trending/tv/week?${this.apiKey}&page=1`;
+        const url2 = `${this.apiUrl}trending/tv/week?${this.apiKey}&page=2`;
+        const url3 = `${this.apiUrl}trending/tv/week?${this.apiKey}&page=3`;
+        const url4 = `${this.apiUrl}trending/tv/week?${this.apiKey}&page=4`;
+        const url5 = `${this.apiUrl}trending/tv/week?${this.apiKey}&page=5`;
 
         const response = await axios.get(url);
         const response2 = await axios.get(url2);
@@ -179,14 +181,14 @@ export default {
         const list4 = response4.data.results;
         const list5 = response5.data.results;
 
-        this.movies = response.data.results.concat(list2, list3, list4, list5);
+        this.series = response.data.results.concat(list2, list3, list4, list5);
       } catch (error) {
         console.error(error);
       }
     },
 
     async getGenre() {
-      const movieUrl = `https://api.themoviedb.org/3/genre/movie/list?${this.apiKey}`;
+      const movieUrl = `https://api.themoviedb.org/3/genre/tv/list?${this.apiKey}`;
       const response = await axios.get(movieUrl);
 
       const genres = response.data.genres;
@@ -197,25 +199,25 @@ export default {
       this.genres = response.data.genres;
     },
 
-    // getID(name) {
-    //   const uniqueIds = new Set(this.genresId)
+    getID(name) {
+      const uniqueIds = new Set(this.genresId)
 
-    //   for (let i = 0; i < this.genres.length; i++) {
-    //     for (let j = 0; j < name.length; j++) {
-    //       if (this.genres[i].name === name[j]) {
-    //         // this.genresId.push(this.genres[i].id);
-    //         uniqueIds.add(this.genres[i].id)
-    //       }
-    //     }
-    //   }
-    //   this.genresId = Array.from(uniqueIds)
-    // },
+      for (let i = 0; i < this.genres.length; i++) {
+        for (let j = 0; j < name.length; j++) {
+          if (this.genres[i].name === name[j]) {
+            // this.genresId.push(this.genres[i].id);
+            uniqueIds.add(this.genres[i].id)
+          }
+        }
+      }
+      this.genresId = Array.from(uniqueIds)
+    },
 
     moveToCard(id) {
       this.$router.push({
         path: `/card/${id}`,
         query: {
-          type: "movie",
+          type: "series",
           value: this.query,
           thisPath: window.location.pathname,
         },

@@ -14,7 +14,7 @@ Before running the project, ensure you have the following:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/star-minus.git
+   git clone https://github.com/Arthurandradens/star-minus.git
 2. Navigate to the project directory:
 
    ```bash

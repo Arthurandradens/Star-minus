@@ -22,10 +22,11 @@ export default createVuetify({
         VTextField: {
           variant:"outlined"
         },
-        
+
     }
   },
   theme: {
+    defaultTheme: 'dark',
     themes: {
       light: {
         colors: {

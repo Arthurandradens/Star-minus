@@ -15,12 +15,17 @@
           max-width="800"
           v-if="card != ''"
         >
+        <v-col class="d-flex align-center justify-space-between">
           <v-card-title v-if="type === 'movie'" class="title ml-1 mb-2">{{
             card.title
           }}</v-card-title>
           <v-card-title v-if="type === 'series'" class="title ml-1 mb-2">{{
             card.name
           }}</v-card-title>
+
+          <v-btn color="primary" @click="addToWatchList(card.title,card.poster_path,type,card.id)" :icon="checkListStatus"></v-btn>
+        </v-col>
+
 
           <v-row>
             <v-col>
@@ -143,11 +148,22 @@ export default {
       trailer: [],
       trailerUrl: "",
       dialog: false,
+      listIcon:false,
       id: this.$route.params.id,
       type: this.$route.query.type,
       path: this.$route.query.thisPath,
       query: this.$route.query.value,
+      message: null
     };
+  },
+
+  computed: {
+    checkListStatus() {
+      if (this.listIcon) {
+        return "mdi-check"
+      }
+      return "mdi-plus"
+    }
   },
 
   methods: {
@@ -204,6 +220,29 @@ export default {
       }
     },
 
+    addToWatchList(name,url,type,id) {
+      const fullUrl = this.imageUrl + url
+
+      const poster = {
+        "name": name,
+        "url": fullUrl,
+        "type": type,
+        "movie_id": id
+      }
+      try {
+        axios.post("http://127.0.0.1:8000/api/add", poster)
+          .then((response) => {
+            this.message = response.data
+
+            this.listIcon = true
+            console.log(this.message.message)
+        })
+
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     homepage(url) {
       window.location.href = `${url}`;
     },
@@ -252,8 +291,6 @@ export default {
 
   created() {
     this.getInfoCard();
-    console.log(this.$route.query.value);
-    // this.getCardImage();
   },
 };
 </script>

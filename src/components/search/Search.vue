@@ -1,11 +1,5 @@
 <template>
   <v-container>
-    <!-- <h1>
-      Results for :
-      <span style="color: #004d40" class="query-text">{{ query }}</span>
-    </h1> -->
-    <v-checkbox-btn v-model="custom" label="Filter"> </v-checkbox-btn>
-
     <v-text-field
       v-model="query"
       label="Search"
@@ -14,13 +8,6 @@
       @keyup.enter="getSearch()"
     >
     </v-text-field>
-    <v-autocomplete
-    v-if="custom"
-    :items="genres"
-    chips
-    multiple>
-
-    </v-autocomplete>
     <v-row justify="center">
       <v-col
         v-for="(card, indice) in movies"

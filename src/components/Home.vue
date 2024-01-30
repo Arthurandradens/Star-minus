@@ -1,15 +1,38 @@
 <template>
   <v-container fluid>
-    <v-card
+    <!-- <v-card
       v-if="liveMovies != ''"
-      class="mx-auto"
+      class="mx-auto image-with-gradient"
       height="650"
       :image="imageUrl + liveMovies[4].backdrop_path"
-    >
+      >
       <span style="font-size: 3rem; font-family: lemon; color: black">{{
         liveMovies[4].title
       }}</span>
-    </v-card>
+    </v-card> -->
+    <!-- <div class="image-container">
+      <v-fade-transition hide-on-leave>
+        <v-img
+          :src="image"
+
+          height="850"
+          cover
+          class="image-with-gradient"
+        ></v-img>
+      </v-fade-transition>
+    </div> -->
+
+    <div class="image-container">
+      <!-- Imagem principal -->
+      <v-fade-transition hide-on-leave>
+        <v-img
+          :src="image"
+          height="850"
+          cover
+          class="image-with-gradient"
+        ></v-img>
+      </v-fade-transition>
+    </div>
 
     <popular-movie></popular-movie>
     <live-movies></live-movies>
@@ -27,11 +50,11 @@
 import LiveMovies from "@/components/movie/LiveMovies.vue";
 import PopularMovie from "@/components/movie/PupularMovie.vue";
 import TopRatedMovies from "@/components/movie/TopRatedMovies.vue";
-import UpComing from "@/components/movie/UpComing.vue"
+import UpComing from "@/components/movie/UpComing.vue";
 import LiveSeries from "@/components/series/LiveSeries.vue";
+import LiveTodaySeries from "@/components/series/LiveTodaySeries.vue";
 import PopularSeries from "@/components/series/PopularSeries.vue";
-import TopRatedSeries from "@/components/series/TopRatedSeries.vue"
-import LiveTodaySeries from "@/components/series/LiveTodaySeries.vue"
+import TopRatedSeries from "@/components/series/TopRatedSeries.vue";
 import axios from "axios";
 
 export default {
@@ -44,7 +67,7 @@ export default {
     TopRatedMovies,
     UpComing,
     TopRatedSeries,
-    LiveTodaySeries
+    LiveTodaySeries,
   },
 
   computed: {},
@@ -53,6 +76,7 @@ export default {
     return {
       moviesURL: import.meta.env.VITE_API_MOVIE,
       imageUrl: "https://image.tmdb.org/t/p/w500/",
+      image: "src/assets/banner2.webp",
       ApiKey: import.meta.env.VITE_API_KEY,
       liveMovies: [],
       currentLiveMoviePage: 1,
@@ -82,4 +106,41 @@ export default {
 </script>
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Lemon&family=Montserrat:wght@400;700&family=Oswald:wght@300&display=swap");
+
+
+/* Transição de fade in e fade out */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.75s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+/* Degradê da imagem de fundo*/
+.image-container {
+  position: relative;
+}
+
+.image-with-gradient {
+  width: 100%;
+  height: auto;
+}
+
+.movie-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; /* Ajuste a largura conforme necessário */
+}
+
+.image-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1), transparent);
+  z-index: 1;
+}
 </style>

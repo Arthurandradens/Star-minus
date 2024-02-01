@@ -16,7 +16,7 @@
       color="secondary"
       variant="solo-filled"
     >
-    <!-- <template v-slot:item="{ index, item }">
+      <!-- <template v-slot:item="{ index, item }">
       <v-chip :key="index" color="primary" variant="outlined" label>
         {{ item.title }}
         <v-icon @click.stop="removeChip(index)">mdi-close</v-icon>
@@ -44,7 +44,7 @@
       >
         <v-hover v-slot="{ isHoverig, props }">
           <v-card
-          v-if="card.poster_path"
+            v-if="card.poster_path"
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
             height="400"
@@ -58,12 +58,14 @@
             variant="text"
             :image="imageUrl + card.poster_path"
             @click="moveToCard(card.id)"
-            >
-            <v-card-title v-if="!card.poster_path" class="mx-auto title align-center"
+          >
+            <v-card-title
+              v-if="!card.poster_path"
+              class="mx-auto title align-center"
               >Imagem <br />
               Não <br />
               Disponível</v-card-title
-              >
+            >
             <!-- <v-img
               v-if="card.poster_path"
               :src="imageUrl + card.poster_path"
@@ -89,74 +91,35 @@ export default {
       search: null,
       movies: [],
       genres: [],
-      teste: [],
       genresName: [],
       genresId: [],
       filterGenre: [],
+      ids: [],
       custom: false,
       apiKey: import.meta.env.VITE_API_KEY,
       apiUrl: import.meta.env.VITE_API_URL,
       imageUrl: import.meta.env.VITE_IMG,
     };
   },
-  // watch: {
-  //   filterGenre(val) {
-  //     if (val.length > this.genresName.length) {
-  //       this.$nextTick(() => this.filterGenre.pop());
-  //     }
-  //   },
-  // },
-
   computed: {
-      // filteredMovies() {
-      //   if (this.filterGenre.length === 0) {
-      //     return this.movies
-      //   }
-      //   else{
-      //     const movies = []
-      //     const newMovies = []
-
-      //     for (let i = 0; i < this.filterGenre.length; i++) {
-      //       for (let j = 0; j < this.genres.length; j++) {
-      //         if (this.genresId[i] === this.genres[j].id) {
-      //           movies.push(this.genres[j].id)
-      //         }
-      //       }
-      //     }
-      //     if (movies.length != 0) {
-      //       for (let i = 0; i < this.movies.length; i++) {
-      //         if (this.movies[i].genre_ids.length != 0) {
-      //           for (let j = 0; j < this.movies[i].genre_ids.length; j++) {
-      //            for (let k = 0; k < movies.length; k++) {
-      //             if (this.movies[i].genre_ids[j] === movies[k]) {
-      //               newMovies.push(this.movies[i])
-      //             }
-      //            }
-      //           }
-      //         }
-      //       }
-      //     }
-      //     return newMovies
-      //   }
-    // }
     filteredMovies() {
-    if (this.filterGenre.length === 0) {
-      return this.movies;
-    } else {
-      const selectedGenreIds = this.genres
-        .filter(genre => this.filterGenre.includes(genre.name))
-        .map(genre => genre.id);
+      if (this.filterGenre.length === 0) {
+        return this.movies;
+      } else {
+        const selectedGenreIds = this.genres
+          .filter((genre) => this.filterGenre.includes(genre.name))
+          .map((genre) => genre.id);
 
-      const newMovies = this.movies.filter(movie => {
-        const intersection = movie.genre_ids.filter(id =>
-          selectedGenreIds.includes(id)
-        );
-        return intersection.length > 0;
-      });
+        const newMovies = this.movies.filter((movie) => {
+          const intersection = movie.genre_ids.filter((id) =>
+            selectedGenreIds.includes(id)
+          );
+          return intersection.length > 0;
+        });
 
-      return newMovies;
-    }
-  },
+        return newMovies;
+      }
+    },
   },
 
   methods: {
@@ -180,6 +143,7 @@ export default {
         const list5 = response5.data.results;
 
         this.movies = response.data.results.concat(list2, list3, list4, list5);
+        this.getIds();
       } catch (error) {
         console.error(error);
       }
@@ -197,26 +161,15 @@ export default {
       this.genres = response.data.genres;
     },
 
-    // getID(name) {
-    //   const uniqueIds = new Set(this.genresId)
-
-    //   for (let i = 0; i < this.genres.length; i++) {
-    //     for (let j = 0; j < name.length; j++) {
-    //       if (this.genres[i].name === name[j]) {
-    //         // this.genresId.push(this.genres[i].id);
-    //         uniqueIds.add(this.genres[i].id)
-    //       }
-    //     }
-    //   }
-    //   this.genresId = Array.from(uniqueIds)
-    // },
+    getIds() {
+      this.ids = this.movies.map((movie) => movie.id);
+    },
 
     moveToCard(id) {
       this.$router.push({
         path: `/card/${id}`,
         query: {
           type: "movie",
-          value: this.query,
           thisPath: window.location.pathname,
         },
       });

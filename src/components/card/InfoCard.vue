@@ -1,15 +1,16 @@
 <template>
   <v-container fluid>
-  <v-row class="d-flex justify-center">
-    <v-col class="" cols="9">
-      <v-alert
-    v-show="alert"
-    variant="tonal"
-    type="success"
-    :title="message"
-  ></v-alert>
-    </v-col>
-  </v-row>
+    <v-row class="d-flex justify-center">
+      <v-col class="" cols="9">
+        <v-alert
+          class="animate__animated animate__bounce"
+          v-show="alert"
+          variant="tonal"
+          type="success"
+          :title="message"
+        ></v-alert>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="12" md="6">
         <v-card class="mx-auto" height="650" variant="text" max-width="500">
@@ -194,11 +195,11 @@ export default {
   },
 
   mounted() {
-    const time = 5000
+    const time = 5000;
 
     setTimeout(() => {
-      this.alert = false
-    },time)
+      this.alert = false;
+    }, time);
   },
 
   methods: {
@@ -279,12 +280,16 @@ export default {
       };
       try {
         if (this.status === "mdi-plus") {
-          axios.post("http://127.0.0.1:8000/api/add", poster).then((response) => {
-            this.message = response.data.message;
+          axios
+            .post("http://127.0.0.1:8000/api/add", poster)
+            .then((response) => {
+              this.message = response.data.message;
 
-            this.status = "mdi-check";
-            this.alert = true
-          });
+              this.status = "mdi-check";
+              this.alert = true;
+
+
+            });
         }
       } catch (error) {
         console.error(error);
@@ -351,5 +356,9 @@ export default {
 .text {
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(233, 190, 253);
+}
+
+.myButton{
+
 }
 </style>

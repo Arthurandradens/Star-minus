@@ -1,15 +1,14 @@
 <template>
   <v-container fluid>
     <v-row class="d-flex justify-start">
-      <v-col class="" >
-       
+      <v-col>
           <v-alert
+          class="animate__animated animate__backInLeft"
           v-show="alert"
           variant="tonal"
           type="success"
           :title="message"
         ></v-alert>
-
       </v-col>
     </v-row>
     <div class="d-flex justify-space-between align-items-center">
@@ -104,12 +103,15 @@ export default {
     };
   },
 
-  mounted() {
-    const time = 4000;
-
-    setTimeout(() => {
-      this.alert = false;
-    }, time);
+  watch: {
+    alert: function (newAlertValue) {
+      if (newAlertValue) {
+        // Se alert for true, configure um timeout para escondê-lo após 5 segundos
+        setTimeout(() => {
+          this.alert = false;
+        }, 5000);
+      }
+    },
   },
 
   methods: {

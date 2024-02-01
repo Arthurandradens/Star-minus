@@ -133,6 +133,7 @@ export default {
           .then((response) => {
             this.alert = true
             this.message = response.data.message;
+            console.log(response.data)
           });
         this.getWatchList();
       } catch (error) {

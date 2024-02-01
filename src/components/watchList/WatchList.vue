@@ -1,30 +1,49 @@
 <template>
   <v-container fluid>
+    <v-row class="d-flex justify-start">
+      <v-col class="" >
+       
+          <v-alert
+          v-show="alert"
+          variant="tonal"
+          type="success"
+          :title="message"
+        ></v-alert>
+
+      </v-col>
+    </v-row>
     <div class="d-flex justify-space-between align-items-center">
       <h1>Whatchlist</h1>
       <div>
-        <v-btn v-if="dialog" class="mr-3" size="35px" icon @click="deleteCard(selected)" color="error">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+        <v-btn
+          v-if="dialog"
+          class="mr-3"
+          size="35px"
+          icon
+          @click="deleteCard(selected)"
+          color="error"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
         <v-menu
-        location="bottom start"
-        origin="overlap"
-        transition="slide-x-transition"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            v-bind="props"
-            icon="mdi-dots-vertical"
-            density="comfortable"
-            variant="tonal"
-          ></v-btn>
-        </template>
+          location="bottom start"
+          origin="overlap"
+          transition="slide-x-transition"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-dots-vertical"
+              density="comfortable"
+              variant="tonal"
+            ></v-btn>
+          </template>
 
-        <v-list>
-          <v-list-item title="edit" @click="edit()"></v-list-item>
-          <v-list-item title="Select all" @click="selectAll()"></v-list-item>
-        </v-list>
-      </v-menu>
+          <v-list>
+            <v-list-item title="edit" @click="edit()"></v-list-item>
+            <v-list-item title="Select all" @click="selectAll()"></v-list-item>
+          </v-list>
+        </v-menu>
       </div>
     </div>
     <br />
@@ -46,8 +65,7 @@
             :image="card.url"
             max-width="400"
             class="mx-auto"
-            @mouseenter="editOn(indice)"
-            @mouseleave="editOff(indice)"
+
             :class="{ ativaEdit: dialog }"
             @click="moveToCard(card.movie_id, card.type)"
           >
@@ -80,8 +98,18 @@ export default {
       list: [],
       selected: [],
       dialog: false,
+      alert: false,
+      message: "",
       transparent: "rgba(255, 255, 255, 0)",
     };
+  },
+
+  mounted() {
+    const time = 4000;
+
+    setTimeout(() => {
+      this.alert = false;
+    }, time);
   },
 
   methods: {
@@ -96,8 +124,14 @@ export default {
 
     async deleteCard(ids) {
       try {
-        console.log(ids)
-        await axios.delete(`http://127.0.0.1:8000/api/destroy/`,{data: {ids}});
+        await axios
+          .delete(`http://127.0.0.1:8000/api/destroy/`, {
+            data: { ids },
+          })
+          .then((response) => {
+            this.alert = true
+            this.message = response.data.message;
+          });
         this.getWatchList();
       } catch (error) {
         console.error(error);
@@ -128,12 +162,12 @@ export default {
         this.selected = this.list.map((item) => item.id);
       }
     },
-    editOn(index) {
-      this.$set(this.list, index, { ...this.list[index], isEditing: true });
-    },
-    editOff(index) {
-      this.$set(this.list, index, { ...this.list[index], isEditing: false });
-    },
+    // editOn(index) {
+    //   this.$set(this.list, index, { ...this.list[index], isEditing: true });
+    // },
+    // editOff(index) {
+    //   this.$set(this.list, index, { ...this.list[index], isEditing: false });
+    // },
   },
 
   created() {

@@ -1,5 +1,15 @@
 <template>
   <v-container fluid>
+  <v-row class="d-flex justify-center">
+    <v-col class="" cols="9">
+      <v-alert
+    v-show="alert"
+    variant="tonal"
+    type="success"
+    :title="message"
+  ></v-alert>
+    </v-col>
+  </v-row>
     <v-row>
       <v-col cols="12" md="6">
         <v-card class="mx-auto" height="650" variant="text" max-width="500">
@@ -25,6 +35,7 @@
 
             <v-btn
               color="primary"
+              elevation="16"
               v-if="type === 'movie'"
               @click="
                 addToWatchList(card.title, card.poster_path, type, card.id)
@@ -168,6 +179,7 @@ export default {
       path: this.$route.query.thisPath,
       query: this.$route.query.value,
       message: null,
+      alert: false,
       status: null,
     };
   },
@@ -179,6 +191,14 @@ export default {
     //   }
     //   return "mdi-plus";
     // },
+  },
+
+  mounted() {
+    const time = 5000
+
+    setTimeout(() => {
+      this.alert = false
+    },time)
   },
 
   methods: {
@@ -260,10 +280,10 @@ export default {
       try {
         if (this.status === "mdi-plus") {
           axios.post("http://127.0.0.1:8000/api/add", poster).then((response) => {
-            this.message = response.data;
+            this.message = response.data.message;
 
             this.status = "mdi-check";
-            console.log(this.message.message);
+            this.alert = true
           });
         }
       } catch (error) {

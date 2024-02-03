@@ -13,13 +13,13 @@
       </v-btn>
     </template>
     <v-row justify="center">
-      <v-col v-for="(movie, indice) in paginateCard" :key="indice">
+      <v-col v-for="(card, indice) in paginateCard" :key="indice">
         <v-hover v-slot="{ isHoverig, props }">
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
             height="180"
-            :image="imageUrl + movie.backdrop_path"
+            :image="imageUrl + card.backdrop_path"
             max-width="400"
             class="mx-auto"
             style="
@@ -28,8 +28,15 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="moveToCard(movie.id,'movie')"
+            @click="moveToCard(card.id, 'movie')"
           >
+            <v-card-title
+              class="mx-auto title align-center"
+              v-if="!card.backdrop_path"
+              >Image <br />
+              Not <br />
+              available</v-card-title
+            >
           </v-card>
         </v-hover>
       </v-col>
@@ -99,9 +106,9 @@ export default {
       return this.moviePage--;
     },
 
-    moveToCard(id,type) {
-      this.$router.push({path:`/card/${id}`, query: {type: type}})
-    }
+    moveToCard(id, type) {
+      this.$router.push({ path: `/card/${id}`, query: { type: type } });
+    },
   },
   created() {
     this.getUpComingMovies();
@@ -109,5 +116,4 @@ export default {
 };
 </script>
 <style>
-
 </style>

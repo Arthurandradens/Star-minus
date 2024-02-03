@@ -35,13 +35,14 @@
     </div>
 
     <popular-movie></popular-movie>
+    <live-today-series></live-today-series>
     <live-movies></live-movies>
     <popular-series></popular-series>
     <top-rated-series></top-rated-series>
     <top-rated-movies></top-rated-movies>
     <live-series></live-series>
     <up-coming></up-coming>
-    <live-today-series></live-today-series>
+
   </v-container>
 </template>
 
@@ -76,7 +77,7 @@ export default {
     return {
       moviesURL: import.meta.env.VITE_API_MOVIE,
       imageUrl: "https://image.tmdb.org/t/p/w500/",
-      image: "src/assets/banner2.webp",
+      image: "src/assets/banner4.jpg",
       ApiKey: import.meta.env.VITE_API_KEY,
       liveMovies: [],
       currentLiveMoviePage: 1,

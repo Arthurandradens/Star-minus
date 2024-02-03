@@ -3,10 +3,11 @@
     <v-row class="d-flex justify-center">
       <v-col class="" cols="9">
         <v-alert
+          v-if="messageType"
           class="animate__animated animate__bounce"
           v-show="alert"
           variant="tonal"
-          type="success"
+          :type="messageType"
           :title="message"
         ></v-alert>
       </v-col>
@@ -159,6 +160,7 @@
   </v-container>
 </template>
 <script>
+import api from "@/api.js";
 import axios from "axios";
 export default {
   name: "InfoCard",
@@ -180,8 +182,10 @@ export default {
       path: this.$route.query.thisPath,
       query: this.$route.query.value,
       message: null,
+      messageType: '',
       alert: false,
       status: null,
+      timeoutId: null,
     };
   },
 
@@ -195,14 +199,34 @@ export default {
   },
 
   mounted() {
-    const time = 5000;
+    this.setupTimeout();
+    // const time = 5000;
 
-    setTimeout(() => {
-      this.alert = false;
-    }, time);
+    // setTimeout(() => {
+    //   this.alert = false;
+    // }, time);
+  },
+
+  destroyed() {
+    this.clearTimeout(); // clear the timeout when the component is destroyed
   },
 
   methods: {
+
+    setupTimeout() {
+      const time = 5000;
+
+      this.timeoutId = setTimeout(() => {
+        this.alert = false;
+      }, time);
+    },
+
+    clearTimeout() {
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+      }
+    },
+
     async getInfoCard() {
       try {
         if (this.type === "movie") {
@@ -227,10 +251,9 @@ export default {
 
     async getCardStatus() {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/movie-status/${this.card.id}`
-        );
-        this.status = response.data.status;
+        await api
+          .get(`http://localhost:8000/api/movie-status/${this.card.id}`)
+          .then((response) => (this.status = response.data.status));
       } catch (error) {
         console.error(error);
       }
@@ -269,7 +292,7 @@ export default {
       }
     },
 
-    addToWatchList(name, url, type, id) {
+    async addToWatchList(name, url, type, id) {
       const fullUrl = this.imageUrl + url;
 
       const poster = {
@@ -280,20 +303,44 @@ export default {
       };
       try {
         if (this.status === "mdi-plus") {
-          axios
-            .post("http://127.0.0.1:8000/api/add", poster)
+          await api
+            .post(`http://localhost:8000/api/add`, poster)
             .then((response) => {
               this.message = response.data.message;
+              this.messageType = response.data.type
 
               this.status = "mdi-check";
               this.alert = true;
 
-
+              this.clearTimeout();
+              this.setupTimeout();
             });
+        } else {
+          this.removeFromList(this.card.id);
         }
       } catch (error) {
         console.error(error);
       }
+    },
+
+    async removeFromList(id) {
+      this.message = '';
+      await api
+        .delete(`http://localhost:8000/api/destroy`, {
+          data: { id },
+        })
+        .then(
+          (response) => {
+
+              this.messageType = response.data.type,
+              this.message = response.data.message,
+              this.status = "mdi-plus",
+              this.alert = true,
+
+              this.clearTimeout(),
+              this.setupTimeout()
+          }
+        );
     },
 
     homepage(url) {
@@ -358,7 +405,6 @@ export default {
   color: rgb(233, 190, 253);
 }
 
-.myButton{
-
+.myButton {
 }
 </style>

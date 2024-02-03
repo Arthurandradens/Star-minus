@@ -1,26 +1,20 @@
 <template>
-  <p class="title">Popular Movies</p>
-  <v-carousel
-    class="movie-container"
-    v-model="moviePage"
-    hideDelimiters
-    hide-delimiter-background
-    height="200"
-  >
+  <p class="title-poster">Popular Movies</p>
+  <v-carousel v-model="moviePage" hideDelimiters hide-delimiter-background>
     <template v-slot:prev>
       <v-btn icon @click="prevSlide()">
         <v-icon> mdi-chevron-left </v-icon>
       </v-btn>
     </template>
     <v-row justify="center">
-      <v-col v-for="(movie, indice) in paginateCard" :key="indice">
+      <v-col v-for="(card, indice) in paginateCard" :key="indice">
         <v-hover v-slot="{ isHoverig, props }">
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
-            height="180"
-            :image="imageUrl + movie.backdrop_path"
-            max-width="400"
+            height="500"
+            :image="imageUrl + card.poster_path"
+            max-width="350"
             class="mx-auto"
             style="
               display: flex;
@@ -28,8 +22,13 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="moveToCard(movie.id,'movie')"
+            @click="moveToCard(card.id,'movie')"
           >
+          <v-card-title class="mx-auto title align-center" v-if="!card.poster_path"
+              >Image <br />
+              Not <br />
+              available</v-card-title
+            >
           </v-card>
         </v-hover>
       </v-col>
@@ -99,9 +98,9 @@ export default {
       return this.moviePage--;
     },
 
-  moveToCard(id,type) {
-      this.$router.push({path:`/card/${id}`, query: {type: type}})
-    }
+    moveToCard(id, type) {
+      this.$router.push({ path: `/card/${id}`, query: { type: type } });
+    },
   },
   created() {
     this.getPopularMovies();
@@ -113,7 +112,6 @@ export default {
   font-size: 1.7rem;
   font-family: "Oswald", sans-serif;
   margin: 1rem;
-
 }
 .movie-container {
   position: relative;

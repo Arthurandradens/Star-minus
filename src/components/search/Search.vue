@@ -37,9 +37,9 @@
               :src="imageUrl + card.poster_path"
             ></v-img>
             <v-card-title class="mx-auto title align-center" v-else
-              >Imagem <br />
-              Não <br />
-              Disponível</v-card-title
+              >Image <br />
+              Not <br />
+              available</v-card-title
             >
           </v-card>
         </v-hover>

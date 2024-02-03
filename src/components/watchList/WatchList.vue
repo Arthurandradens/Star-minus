@@ -1,12 +1,13 @@
 <template>
-  <v-container fluid>
+  <v-container fluid @click="resetEdit()">
     <v-row class="d-flex justify-start">
       <v-col>
-          <v-alert
+        <v-alert
+          v-if="type"
           class="animate__animated animate__backInLeft"
           v-show="alert"
           variant="tonal"
-          type="success"
+          :type="type"
           :title="message"
         ></v-alert>
       </v-col>
@@ -20,6 +21,7 @@
           size="35px"
           icon
           @click="deleteCard(selected)"
+          @click.stop
           color="error"
         >
           <v-icon>mdi-delete</v-icon>
@@ -64,14 +66,13 @@
             :image="card.url"
             max-width="400"
             class="mx-auto"
-
             :class="{ ativaEdit: dialog }"
             @click="moveToCard(card.movie_id, card.type)"
           >
-            <v-card-title v-if="!card.url" class="mx-auto title align-center"
-              >Imagem <br />
-              Não <br />
-              Disponível</v-card-title
+          <v-card-title class="mx-auto title align-center" v-if="!card.url"
+              >Image <br />
+              Not <br />
+              available</v-card-title
             >
             <v-card-actions class="justify-end">
               <v-checkbox
@@ -89,6 +90,7 @@
 </template>
 
 <script>
+import api from "@/api";
 import axios from "axios";
 export default {
   name: "watchlist",
@@ -96,6 +98,7 @@ export default {
     return {
       list: [],
       selected: [],
+      type: "",
       dialog: false,
       alert: false,
       message: "",
@@ -124,16 +127,17 @@ export default {
       }
     },
 
-    async deleteCard(ids) {
+    async deleteCard(id) {
       try {
-        await axios
-          .delete(`http://127.0.0.1:8000/api/destroy/`, {
-            data: { ids },
+        await api
+          .delete(`http://localhost:8000/api/destroy/`, {
+            data: { id },
           })
           .then((response) => {
-            this.alert = true
+            this.alert = true;
+            this.type = response.data.type;
             this.message = response.data.message;
-            console.log(response.data)
+            this.selected = [];
           });
         this.getWatchList();
       } catch (error) {
@@ -164,6 +168,11 @@ export default {
         this.dialog = true;
         this.selected = this.list.map((item) => item.id);
       }
+    },
+
+    resetEdit() {
+      this.dialog = false;
+      this.selected = [];
     },
     // editOn(index) {
     //   this.$set(this.list, index, { ...this.list[index], isEditing: true });

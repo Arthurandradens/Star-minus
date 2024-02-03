@@ -7,13 +7,13 @@
       </v-btn>
     </template>
     <v-row justify="center">
-      <v-col v-for="(movie, indice) in paginateCard" :key="indice">
+      <v-col v-for="(card, indice) in paginateCard" :key="indice">
         <v-hover v-slot="{ isHoverig, props }">
           <v-card
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
             height="500"
-            :image="imageUrl + movie.poster_path"
+            :image="imageUrl + card.poster_path"
             max-width="350"
             class="mx-auto"
             style="
@@ -22,8 +22,13 @@
               justify-content: space-between;
             "
             variant="text"
-            @click="moveToCard(movie.id,'movie')"
+            @click="moveToCard(card.id,'movie')"
           >
+          <v-card-title class="mx-auto title align-center" v-if="!card.poster_path"
+              >Image <br />
+              Not <br />
+              available</v-card-title
+            >
           </v-card>
         </v-hover>
       </v-col>

@@ -24,6 +24,11 @@
             variant="text"
             @click="moveToCard(series.id,'series')"
           >
+          <v-card-title class="mx-auto title align-center" v-if="!series.backdrop_path"
+              >Image <br />
+              Not <br />
+              available</v-card-title
+            >
           </v-card>
         </v-hover>
       </v-col>

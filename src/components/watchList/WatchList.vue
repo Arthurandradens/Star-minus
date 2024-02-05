@@ -120,8 +120,9 @@ export default {
   methods: {
     async getWatchList() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/watchlist");
-        this.list = response.data.results;
+        api
+          .get(`watchlist`)
+          .then((response) => this.list = response.data.results)
       } catch (error) {
         console.log(error);
       }
@@ -130,7 +131,7 @@ export default {
     async deleteCard(id) {
       try {
         await api
-          .delete(`http://localhost:8000/api/destroy/`, {
+          .delete(`destroy`, {
             data: { id },
           })
           .then((response) => {

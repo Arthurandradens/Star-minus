@@ -182,7 +182,7 @@ export default {
       path: this.$route.query.thisPath,
       query: this.$route.query.value,
       message: null,
-      messageType: '',
+      messageType: "",
       alert: false,
       status: null,
       timeoutId: null,
@@ -212,7 +212,6 @@ export default {
   },
 
   methods: {
-
     setupTimeout() {
       const time = 5000;
 
@@ -252,7 +251,7 @@ export default {
     async getCardStatus() {
       try {
         await api
-          .get(`http://localhost:8000/api/movie-status/${this.card.id}`)
+          .get(`movie-status/${this.card.id}`)
           .then((response) => (this.status = response.data.status));
       } catch (error) {
         console.error(error);
@@ -303,18 +302,16 @@ export default {
       };
       try {
         if (this.status === "mdi-plus") {
-          await api
-            .post(`http://localhost:8000/api/add`, poster)
-            .then((response) => {
-              this.message = response.data.message;
-              this.messageType = response.data.type
+          await api.post(`add`, poster).then((response) => {
+            this.message = response.data.message;
+            this.messageType = response.data.type;
 
-              this.status = "mdi-check";
-              this.alert = true;
+            this.status = "mdi-check";
+            this.alert = true;
 
-              this.clearTimeout();
-              this.setupTimeout();
-            });
+            this.clearTimeout();
+            this.setupTimeout();
+          });
         } else {
           this.removeFromList(this.card.id);
         }
@@ -324,23 +321,19 @@ export default {
     },
 
     async removeFromList(id) {
-      this.message = '';
+      this.message = "";
       await api
-        .delete(`http://localhost:8000/api/destroy`, {
+        .delete(`destroy`, {
           data: { id },
         })
-        .then(
-          (response) => {
-
-              this.messageType = response.data.type,
-              this.message = response.data.message,
-              this.status = "mdi-plus",
-              this.alert = true,
-
-              this.clearTimeout(),
-              this.setupTimeout()
-          }
-        );
+        .then((response) => {
+          (this.messageType = response.data.type),
+            (this.message = response.data.message),
+            (this.status = "mdi-plus"),
+            (this.alert = true),
+            this.clearTimeout(),
+            this.setupTimeout();
+        });
     },
 
     homepage(url) {
@@ -353,19 +346,7 @@ export default {
       }
       return this.genres;
     },
-
-    // async getCardImage() {
-    //   try {
-    //     const id = this.$route.params.id;
-    //     const url = `${this.movieUrl}/${id}/images?${this.ApiKey}`;
-
-    //     const response = await axios.get(url);
-    //     this.image = response.data["backdrops"];
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-
+    
     formatCurrency(number) {
       return number.toLocaleString("en-US", {
         style: "currency",
@@ -405,6 +386,4 @@ export default {
   color: rgb(233, 190, 253);
 }
 
-.myButton {
-}
 </style>

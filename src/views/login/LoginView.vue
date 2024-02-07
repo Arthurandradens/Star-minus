@@ -1,10 +1,6 @@
 <template>
-  <v-container fluid>
-    <v-card
-      class="mx-auto px-6 py-8 card"
-      max-width="344"
-      title="Create a Session"
-    >
+  <!-- <v-container>
+    <v-card class="mx-auto px-6 py-8" max-width="400">
       <v-form v-model="form" @submit.prevent="onSubmit">
         <v-text-field
           v-model="email"
@@ -39,24 +35,25 @@
         </v-btn>
       </v-form>
     </v-card>
-  </v-container>
+  </v-container> -->
+  alo
 </template>
 
-<script>
-import axios from "axios";
-
-const TMDB_API_BASE_URL = "https://api.themoviedb.org/3";
-
+<script >
 export default {
-  data() {
+  name: "LoginView",
+
+  components: {},
+
+  data: () => {
     return {
-      ApiKey: import.meta.env.VITE_API_KEY,
       form: false,
       email: null,
       password: null,
       loading: false,
     };
   },
+
   methods: {
     async onSubmit() {
       if (!this.form) return;
@@ -64,8 +61,7 @@ export default {
       setTimeout(() => (this.loading = false), 2000);
     },
 
-    async moveToHome(token) {
-    },
+    async moveToHome(token) {},
 
     required(v) {
       return !!v || "Field is required";
@@ -73,13 +69,8 @@ export default {
   },
 };
 </script>
-
 <style>
 body {
-  background-color: #0e0b13;
-}
-
-.card {
-  margin-top: 12rem;
+  background-color: #271f44;
 }
 </style>

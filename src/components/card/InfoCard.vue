@@ -251,7 +251,12 @@ export default {
     async getCardStatus() {
       try {
         await api
-          .get(`movie-status/${this.card.id}`)
+          .get(`movie-status/${this.card.id}`,{
+            headers: {
+              Authorization:
+                "Bearer 1|sCWopEqwRdHVHs4RXDnEDRUkZaSFBcbqLzqHcpvVa47b191b",
+            },
+      })
           .then((response) => (this.status = response.data.status));
       } catch (error) {
         console.error(error);
@@ -302,7 +307,12 @@ export default {
       };
       try {
         if (this.status === "mdi-plus") {
-          await api.post(`add`, poster).then((response) => {
+          await api.post(`add`, poster,{
+            headers: {
+              Authorization:
+                "Bearer 1|sCWopEqwRdHVHs4RXDnEDRUkZaSFBcbqLzqHcpvVa47b191b",
+            },
+      }).then((response) => {
             this.message = response.data.message;
             this.messageType = response.data.type;
 
@@ -346,7 +356,7 @@ export default {
       }
       return this.genres;
     },
-    
+
     formatCurrency(number) {
       return number.toLocaleString("en-US", {
         style: "currency",

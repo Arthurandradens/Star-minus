@@ -69,7 +69,7 @@
             :class="{ ativaEdit: dialog }"
             @click="moveToCard(card.movie_id, card.type)"
           >
-          <v-card-title class="mx-auto title align-center" v-if="!card.url"
+            <v-card-title class="mx-auto title align-center" v-if="!card.url"
               >Image <br />
               Not <br />
               available</v-card-title
@@ -120,9 +120,18 @@ export default {
   methods: {
     async getWatchList() {
       try {
-        api
-          .get(`watchlist`)
-          .then((response) => this.list = response.data.results)
+      const response = await api.get(`watchlist`, {
+            headers: {
+              Authorization:
+                "Bearer 1|sCWopEqwRdHVHs4RXDnEDRUkZaSFBcbqLzqHcpvVa47b191b",
+            },
+      })
+      this.list = response.data.results,
+      console.log(response)
+          // .then((response) =>
+
+          //     console.log(response)
+          // );
       } catch (error) {
         console.log(error);
       }

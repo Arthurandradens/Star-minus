@@ -63,13 +63,16 @@
             v-bind="props"
             :elevation="isHoverig ? 6 : 24"
             height="400"
-            :image="card.url"
+            :image="card.attributes.url"
             max-width="400"
             class="mx-auto"
             :class="{ ativaEdit: dialog }"
-            @click="moveToCard(card.movie_id, card.type)"
+            attributes.
+            @click="moveToCard(card.attributes.movie_id, card.attributes.type)"
           >
-            <v-card-title class="mx-auto title align-center" v-if="!card.url"
+            <v-card-title
+              class="mx-auto title align-center"
+              v-if="!card.attributes.url"
               >Image <br />
               Not <br />
               available</v-card-title
@@ -91,7 +94,6 @@
 
 <script>
 import api from "@/api";
-import axios from "axios";
 export default {
   name: "watchlist",
   data() {
@@ -120,18 +122,17 @@ export default {
   methods: {
     async getWatchList() {
       try {
-      const response = await api.get(`watchlist`, {
-            headers: {
-              Authorization:
-                "Bearer 1|sCWopEqwRdHVHs4RXDnEDRUkZaSFBcbqLzqHcpvVa47b191b",
-            },
-      })
-      this.list = response.data.results,
-      console.log(response)
-          // .then((response) =>
+        const response = await api.get(`watchlist`, {
+          headers: {
+            Authorization:
+              "Bearer 5|T4qlLLl8Zcqq53NCLjieekcuuHRimSFnDUHxHeZ1ddf02443",
+          },
+        });
+        (this.list = response.data.results), console.log(this.list);
+        // .then((response) =>
 
-          //     console.log(response)
-          // );
+        //     console.log(response)
+        // );
       } catch (error) {
         console.log(error);
       }

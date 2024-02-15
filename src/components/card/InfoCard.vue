@@ -254,7 +254,7 @@ export default {
           .get(`movie-status/${this.card.id}`,{
             headers: {
               Authorization:
-                "Bearer 1|sCWopEqwRdHVHs4RXDnEDRUkZaSFBcbqLzqHcpvVa47b191b",
+                "Bearer 5|T4qlLLl8Zcqq53NCLjieekcuuHRimSFnDUHxHeZ1ddf02443",
             },
       })
           .then((response) => (this.status = response.data.status));
@@ -304,13 +304,14 @@ export default {
         url: fullUrl,
         type: type,
         movie_id: id,
+        user_id: 13
       };
       try {
         if (this.status === "mdi-plus") {
           await api.post(`add`, poster,{
             headers: {
               Authorization:
-                "Bearer 1|sCWopEqwRdHVHs4RXDnEDRUkZaSFBcbqLzqHcpvVa47b191b",
+                "Bearer 5|T4qlLLl8Zcqq53NCLjieekcuuHRimSFnDUHxHeZ1ddf02443",
             },
       }).then((response) => {
             this.message = response.data.message;

@@ -78,7 +78,7 @@ export default {
     },
 
     moveToHome() {
-      this.$router.push(`/home`);
+      this.$router.push(`/`);
     },
 
     moveToSearch() {

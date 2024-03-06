@@ -22,9 +22,9 @@
       </v-fade-transition>
     </div> -->
 
-    <div class="image-container">
+    <!-- <div class="image-container"> -->
       <!-- Imagem principal -->
-      <v-fade-transition hide-on-leave>
+      <!-- <v-fade-transition hide-on-leave>
         <v-img
           :src="image"
           height="850"
@@ -32,7 +32,7 @@
           class="image-with-gradient"
         ></v-img>
       </v-fade-transition>
-    </div>
+    </div> -->
 
     <popular-movie></popular-movie>
     <live-today-series></live-today-series>

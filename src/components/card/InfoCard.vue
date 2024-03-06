@@ -251,12 +251,13 @@ export default {
     async getCardStatus() {
       try {
         await api
-          .get(`movie-status/${this.card.id}`,{
-            headers: {
-              Authorization:
-                "Bearer 5|T4qlLLl8Zcqq53NCLjieekcuuHRimSFnDUHxHeZ1ddf02443",
-            },
-      })
+          .get(`movie-status/${this.card.id}`)
+      //     .get(`movie-status/${this.card.id}`,{
+      //       headers: {
+      //         Authorization:
+      //           "Bearer 5|T4qlLLl8Zcqq53NCLjieekcuuHRimSFnDUHxHeZ1ddf02443",
+      //       },
+      // })
           .then((response) => (this.status = response.data.status));
       } catch (error) {
         console.error(error);

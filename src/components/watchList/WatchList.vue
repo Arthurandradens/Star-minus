@@ -68,7 +68,7 @@
             class="mx-auto"
             :class="{ ativaEdit: dialog }"
             attributes.
-            @click="moveToCard(card.attributes.movie_id, card.attributes.type)"
+            @click="moveToCard(card.attributes.movieId, card.attributes.type)"
           >
             <v-card-title
               class="mx-auto title align-center"

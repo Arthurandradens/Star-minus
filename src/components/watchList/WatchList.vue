@@ -20,7 +20,7 @@
           class="mr-3"
           size="35px"
           icon
-          @click="deleteCard(selected)"
+          @click="deleteCard([selected])"
           @click.stop
           color="error"
         >
@@ -128,7 +128,7 @@ export default {
               "Bearer 5|T4qlLLl8Zcqq53NCLjieekcuuHRimSFnDUHxHeZ1ddf02443",
           },
         });
-        (this.list = response.data.results), console.log(this.list);
+        (this.list = response.data.results)
         // .then((response) =>
 
         //     console.log(response)
@@ -138,12 +138,10 @@ export default {
       }
     },
 
-    async deleteCard(id) {
+    async deleteCard(ids) {
       try {
         await api
-          .delete(`destroy`, {
-            data: { id },
-          })
+          .delete(`destroy/${ids}`)
           .then((response) => {
             this.alert = true;
             this.type = response.data.type;

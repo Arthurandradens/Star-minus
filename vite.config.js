@@ -46,8 +46,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': "http://localhost:8000"
+      '/api': "https://star-minus-watchlist-production.up.railway.app"
     },
-    port: 8080,
+    port: 8000,
   },
 })

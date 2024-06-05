@@ -48,6 +48,6 @@ export default defineConfig({
     proxy: {
       '/api': "https://santander-bootcamp-prd.up.railway.app"
     },
-    port: 8000,
+    port: "https://star-minus.vercel.app",
   },
 })

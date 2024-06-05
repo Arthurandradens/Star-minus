@@ -46,7 +46,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': "https://star-minus-watchlist-production.up.railway.app"
+      '/api': "https://santander-bootcamp-prd.up.railway.app"
     },
     port: 8000,
   },
